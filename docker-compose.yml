@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  svelte-app:
+    build: ./Svelte-files
+    ports:
+      - "5173:5173"  # Expose the dev server
+    volumes:
+      - ./Svelte-files:/app  # Sync local changes
+      - /app/node_modules  # Prevent overwriting node_modules
+    depends_on:
+      - redis
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
