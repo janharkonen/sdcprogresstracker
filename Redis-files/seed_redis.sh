@@ -19,6 +19,7 @@ redis-cli SET item1:user1 0
 redis-cli SET item2:user1 0
 redis-cli SET item3:user1 0
 redis-cli SET item4:user1 0
+redis-cli CONFIG SET notify-keyspace-events KEA
 
 echo "Redis seeding complete."
 
