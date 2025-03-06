@@ -34,6 +34,22 @@
     console.log('WebSocket connection closed');
   });
   
+  // Function to increment the counter
+  function incrementCounter() {
+    // Send an increment command to the server
+    if (socket.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({
+        action: 'increment',
+        key: 'item1:user1'
+      });
+      console.log('Sending message to server:', message);
+      socket.send(message);
+    } else {
+      console.error('WebSocket not connected, readyState:', socket.readyState);
+      // For reference: 0 = CONNECTING, 1 = OPEN, 2 = CLOSING, 3 = CLOSED
+    }
+  }
+
   let panel2 = 0;
   let panel3 = 0;
   let panel4 = 0;
@@ -41,6 +57,7 @@
 
 <div>
   <p>Row 1: {$panel1}</p>
+  <button on:click={incrementCounter}>add one</button>
   <p>Row 2: {panel2}</p>
   <p>Row 3: {panel3}</p>
   <p>Row 4: {panel4}</p>

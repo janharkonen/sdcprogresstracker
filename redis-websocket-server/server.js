@@ -75,6 +75,38 @@ async function runServer() {
           }
         });
         
+        // Handle messages from the client
+        ws.on('message', async (data) => {
+          console.log('WebSocket message received:', data);
+          console.log('Message type:', typeof data);
+          
+          try {
+            // Convert Buffer to string if needed
+            const dataStr = data instanceof Buffer ? data.toString() : data;
+            console.log('Data as string:', dataStr);
+            
+            const message = JSON.parse(dataStr);
+            console.log('Parsed message:', message);
+            
+            if (message.action === 'increment' && message.key === 'item1:user1') {
+              console.log('Incrementing key:', message.key);
+              
+              // Get current value and increment
+              const currentValue = await redisClient.get(message.key) || '0';
+              console.log('Current value:', currentValue);
+              const newValue = (parseFloat(currentValue) + 1).toString();
+              
+              // Update the value in Redis
+              await redisClient.set(message.key, newValue);
+              console.log('Key updated to:', newValue);
+            } else {
+              console.log('Unhandled message action or key:', message);
+            }
+          } catch (err) {
+            console.error('Error processing message:', err, 'Raw data:', data);
+          }
+        });
+        
         ws.on('close', async () => {
           console.log('Client disconnected');
           await subscriber.quit();
