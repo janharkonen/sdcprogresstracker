@@ -20,5 +20,16 @@ services:
     volumes:
       - redis-data:/data
 
+  websocket-server:
+    build: ./redis-websocket-server
+    container_name: node-websocket
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=${REDIS_URL}
+    restart: unless-stopped
+
 volumes:
   redis-data:

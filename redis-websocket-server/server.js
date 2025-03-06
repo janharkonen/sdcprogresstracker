@@ -1,29 +1,25 @@
 const WebSocket = require('ws');
 const redis = require('redis');
 
-// Create Redis clients with proper connection
 const createRedisClient = async () => {
-  const client = redis.createClient();
-  
+  const redisUrl = process.env.REDIS_URL;
+  const client = redis.createClient({
+    url: redisUrl
+  });   
   client.on('error', (err) => {
     console.error('Redis error:', err);
   });
-  
-  // Connect to Redis
   await client.connect();
-  console.log('Connected to Redis');
-  
+  console.log('Connected to Redis'); 
   return client;
 };
 
-// Main function to run the server
 async function runServer() {
   try {
-    // Create and connect main Redis client
     const redisClient = await createRedisClient();
     
     // Enable keyspace notifications (K: Keyspace events, E: Keyevent events, A: all commands)
-    //await redisClient.configSet('notify-keyspace-events', 'KEA');
+    await redisClient.configSet('notify-keyspace-events', 'KEA');
     console.log('Redis keyspace notifications enabled');
     
     // Create a WebSocket server
@@ -120,5 +116,4 @@ async function runServer() {
   }
 }
 
-// Run the server
 runServer();
