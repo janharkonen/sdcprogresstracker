@@ -16,22 +16,27 @@ mkdir -p ./nginx/logs
 
 # Copy nginx config file if it doesn't exist
 if [ ! -f ./nginx/conf/app.conf ]; then
-  cp app.conf ./nginx/conf/
+  echo "NGINX config file not found. Please create ./nginx/conf/app.conf first."
+  exit 1
 fi
 
 # Create dummy certificates (for initial startup)
-if [ ! -d "./nginx/certbot/conf/live/$domains" ]; then
+domain_path="./nginx/certbot/conf/live/${domains[0]}"
+if [ ! -d "$domain_path" ]; then
   echo "Creating dummy certificates..."
-  mkdir -p "./nginx/certbot/conf/live/$domains"
+  mkdir -p "$domain_path"
   openssl req -x509 -nodes -newkey rsa:4096 -days 1 \
-    -keyout "./nginx/certbot/conf/live/$domains/privkey.pem" \
-    -out "./nginx/certbot/conf/live/$domains/fullchain.pem" \
+    -keyout "$domain_path/privkey.pem" \
+    -out "$domain_path/fullchain.pem" \
     -subj "/CN=localhost"
 fi
 
 # Start nginx
 echo "Starting nginx..."
 docker-compose up -d nginx
+
+# Sleep to ensure nginx is up and running
+sleep 5
 
 # Request real certificates
 echo "Requesting Let's Encrypt certificates..."
@@ -48,7 +53,12 @@ else
   staging_arg=""
 fi
 
-docker-compose run --rm certbot certonly --webroot -w /var/www/certbot \
+# Run certbot with explicit command instead of using the entrypoint from docker-compose
+docker-compose run --rm \
+  --entrypoint certbot \
+  certbot \
+  certonly --webroot \
+  --webroot-path=/var/www/certbot \
   $staging_arg \
   --email $email \
   --agree-tos \

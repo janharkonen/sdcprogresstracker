@@ -4,32 +4,39 @@ services:
   svelte-app:
     build: ./Svelte-files
     container_name: svelte
-    ports:
-      - "5173:5173"  # Expose the dev server
+    # No need to expose port 5173 to the world
+    # Nginx will proxy to this container
+    expose:
+      - "5173"
     volumes:
-      - ./Svelte-files:/app  # Sync local changes
-      - /app/node_modules  # Prevent overwriting node_modules
+      - ./Svelte-files:/app
+      - /app/node_modules
     depends_on:
       - redis
+    restart: unless-stopped
   
   redis:
     build: ./Redis-files
     container_name: redis
-    ports:
-      - "6379:6379"
+    # Redis should not be exposed to the outside world
+    expose:
+      - "6379"
     volumes:
       - redis-data:/data
+    restart: unless-stopped
 
   websocket-server:
     build: ./redis-websocket-server
     container_name: node-websocket
-    ports:
-      - "8080:8080"
+    # Websocket server is proxied through nginx
+    expose:
+      - "8080"
     depends_on:
       - redis
     environment:
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://redis:6379
     restart: unless-stopped
+
   nginx:
     image: nginx:alpine
     container_name: nginx
@@ -54,7 +61,8 @@ services:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
     restart: unless-stopped
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    # This command will run in the background and renew certificates when needed
+    command: renew --quiet --webroot --webroot-path=/var/www/certbot
 
 volumes:
   redis-data:
