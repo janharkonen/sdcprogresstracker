@@ -1,4 +1,2 @@
 node_modules
-nginx/certbot/conf/
-nginx/certbot/www/
-nginx/logs
+.env

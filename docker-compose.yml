@@ -11,6 +11,9 @@ services:
       - /app/node_modules
     depends_on:
       - redis
+    environment:
+      - VITE_WEBSOCKET_URL=${WEBSOCKET_URL}
+
     restart: unless-stopped
   
   redis:
