@@ -5,7 +5,7 @@
   export let panel1 = writable(0);
   
   // Connect to the WebSocket server
-  const socket = new WebSocket('ws://localhost:8080');
+  const socket = new WebSocket('wss://sdc.janharkonen.fi/ws/');
   
   // Listen for messages from the WebSocket server
   socket.addEventListener('message', (event) => {

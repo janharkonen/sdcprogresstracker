@@ -26,7 +26,7 @@ async function runServer() {
     const wss = new WebSocket.Server({ port: 8080 });
     
     wss.on('listening', () => {
-      console.log('WebSocket server is listening on ws://localhost:8080');
+      console.log('WebSocket server is listening on ws://node-websocket:8080');
     });
     
     wss.on('error', (err) => {
