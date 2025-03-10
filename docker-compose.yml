@@ -4,10 +4,8 @@ services:
   svelte-app:
     build: ./Svelte-files
     container_name: svelte
-    # No need to expose port 5173 to the world
-    # Nginx will proxy to this container
-    expose:
-      - "5173"
+    ports:
+      - "5173:5173"
     volumes:
       - ./Svelte-files:/app
       - /app/node_modules
@@ -18,9 +16,8 @@ services:
   redis:
     build: ./Redis-files
     container_name: redis
-    # Redis should not be exposed to the outside world
-    expose:
-      - "6379"
+    ports:
+      - "6379:6379"
     volumes:
       - redis-data:/data
     restart: unless-stopped
@@ -28,9 +25,8 @@ services:
   websocket-server:
     build: ./redis-websocket-server
     container_name: node-websocket
-    # Websocket server is proxied through nginx
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     depends_on:
       - redis
     environment:
