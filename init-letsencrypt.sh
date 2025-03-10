@@ -6,13 +6,17 @@
 # Change these variables:
 domains=(sdc.janharkonen.fi)  # Your domains
 email="jan.harkonen@pionblanc.fi"  # Your email for Let's Encrypt notices
-staging=1  # Set to 1 for testing, 0 for production
+staging=0  # Set to 1 for testing, 0 for production
 
 # Create required directories
 mkdir -p ./nginx/certbot/conf
 mkdir -p ./nginx/certbot/www
 mkdir -p ./nginx/conf
 mkdir -p ./nginx/logs
+
+# Test ACME challenge directory
+echo "Testing ACME challenge directory..."
+echo "acme-test-file" > ./nginx/certbot/www/test.txt
 
 # Copy nginx config file if it doesn't exist
 if [ ! -f ./nginx/conf/app.conf ]; then
@@ -38,7 +42,13 @@ docker-compose up -d nginx
 # Sleep to ensure nginx is up and running
 sleep 5
 
-# Request real certificates
+# Test if ACME challenge directory is accessible locally
+echo "Testing if ACME challenge directory is accessible locally..."
+curl -v http://localhost/.well-known/acme-challenge/test.txt
+echo ""
+echo "If you don't see 'acme-test-file' above, check your NGINX configuration"
+
+# Request real certificates with verbose output
 echo "Requesting Let's Encrypt certificates..."
 # Join domains for certbot command
 domain_args=""
@@ -53,7 +63,7 @@ else
   staging_arg=""
 fi
 
-# Run certbot with explicit command instead of using the entrypoint from docker-compose
+# Run certbot with explicit command and verbose output
 docker-compose run --rm \
   --entrypoint certbot \
   certbot \
@@ -63,6 +73,7 @@ docker-compose run --rm \
   --email $email \
   --agree-tos \
   --no-eff-email \
+  -v \
   $domain_args
 
 # Reload nginx
@@ -70,3 +81,9 @@ echo "Reloading nginx..."
 docker-compose exec nginx nginx -s reload
 
 echo "Setup completed!"
+echo ""
+echo "If certification failed, try these troubleshooting steps:"
+echo "1. If using Cloudflare, temporarily disable the proxy (gray cloud)"
+echo "2. Check that ports 80 and 443 are open in your firewall"
+echo "3. Verify your DNS records point to this server's IP"
+echo "4. Ensure there are no rate limits (https://letsencrypt.org/docs/rate-limits/)"
