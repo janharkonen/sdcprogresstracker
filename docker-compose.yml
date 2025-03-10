@@ -33,32 +33,5 @@ services:
       - REDIS_URL=redis://redis:6379
     restart: unless-stopped
 
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf:/etc/nginx/conf.d
-      - ./nginx/certbot/conf:/etc/letsencrypt
-      - ./nginx/certbot/www:/var/www/certbot
-      - ./nginx/logs:/var/log/nginx
-    depends_on:
-      - svelte-app
-      - websocket-server
-    restart: unless-stopped
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./nginx/certbot/conf:/etc/letsencrypt
-      - ./nginx/certbot/www:/var/www/certbot
-    restart: unless-stopped
-    # This command will run in the background and renew certificates when needed
-    command: renew --quiet --webroot --webroot-path=/var/www/certbot
-
 volumes:
   redis-data:
