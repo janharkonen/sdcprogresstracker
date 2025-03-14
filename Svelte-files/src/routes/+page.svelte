@@ -26,5 +26,8 @@
 
 <div>
   <p>Row 1: {$panel1}</p>
-  <Button />
+  <Button key='item1:user1' />
+  <Button key='item2:user1' />
+  <Button key='item3:user1' />
+  <Button key='item4:user1' />
 </div>
