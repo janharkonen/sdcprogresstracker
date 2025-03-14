@@ -14,9 +14,8 @@ const createRedisClient = async () => {
 async function runServer() {
   try {
     const wss = new WebSocket.Server({ port: 8080 });
-    const redisClient = await createRedisClient();
-    
-    const subscribedKeys = new Map(); 
+    const redisSubClient = await createRedisClient();
+    const redisPubClient = await createRedisClient();
     
     wss.on('listening', () => {
       console.log('WebSocket server is listening on port 8080');
@@ -28,29 +27,33 @@ async function runServer() {
     
     wss.on('connection', async (ws) => {
       console.log('Client connected');
+     
+
+      const keys = await redisPubClient.keys('item*:user*');
+      //const keys = [
+      //  'item1:user1',
+      //  'item2:user1',
+      //  'item3:user1',
+      //  'item4:user1',
+      //];
+      console.log(keys)
+      keys.forEach(async (key) => {
+        await redisSubClient.subscribe(`__keyspace@0__:${key}`, async () => {
+          const newValue = await redisPubClient.get(key);
+          wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({ key, value: newValue }));
+            }
+          });
+        });
+      });
       
       try {
         // Handle messages from the client
         ws.on('message', async (data) => {
-          const { action, key } = JSON.parse(data);
-  
-          if (action === 'subscribe') {
-            // Subscribe the client to the Redis key
-            if (!subscribedKeys.has(key)) {
-              await redisClient.subscribe(`__keyspace@0__:${key}`, async (message) => {
-                const newValue = await redisClient.get(key);
-                wss.clients.forEach(client => {
-                  if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ key, value: newValue }));
-                  }
-                });
-              });
-              subscribedKeys.set(key, true);
-            }
-          }
-  
+          const { action, key, value } = JSON.parse(data); 
           if (action === 'update') {
-            await redisClient.set(key, data.value);
+            await redisPubClient.set(key, value);
           }
         });
         

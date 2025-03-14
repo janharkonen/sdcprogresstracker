@@ -11,10 +11,6 @@
     onMount(() => {
         socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
         
-        socket.onopen = () => {
-          socket.send(JSON.stringify({ action: 'subscribe', key: key }));
-        }
-
         socket.onmessage = (event) => {
           const { key: receivedKey, value: newValue } = JSON.parse(event.data);
           if (receivedKey === key) {
@@ -28,7 +24,7 @@
     });
     
     const updateValue = () => {
-        const newValue = '12';
+        const newValue = Number($value) + 1;
         socket.send(JSON.stringify({ action: 'update', key, value: newValue }));
     };
 </script>
