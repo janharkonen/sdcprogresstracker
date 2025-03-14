@@ -1,17 +1,19 @@
 <script lang="ts">
-    import { writable } from 'svelte/store';
-    let value = writable(3);
-    export let socket: WebSocket;
-
-    socket.addEventListener('message', (event) => {
-        value.set(event.data);
+    import { onMount } from 'svelte';
+    let value : number = 0;
+    let socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+    
+    onMount(() => {
+      socket.onmessage = (event) => {
+        value = event.data;
+      };
     });
-
+    
     function incrementCounter() {
     // Send an increment command to the server
     if (socket.readyState === WebSocket.OPEN) {
       const message = JSON.stringify({
-        action: 'increment',
+        //action: 'increment',
         key: 'item1:user1'
       });
       console.log('Sending message to server:', message);
@@ -24,5 +26,5 @@
 </script>
 
 <button on:click={incrementCounter}>
-    {$value}
+    {value}
 </button>
