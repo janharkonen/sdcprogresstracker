@@ -26,5 +26,5 @@
 
 <div>
   <p>Row 1: {$panel1}</p>
-  <Button value={0} socket={socket}></Button>
+  <Button socket={socket}></Button>
 </div>

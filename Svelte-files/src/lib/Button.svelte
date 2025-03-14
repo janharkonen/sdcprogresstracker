@@ -1,6 +1,11 @@
-<script>
-    export let value;
+<script lang="ts">
+    import { writable } from 'svelte/store';
+    let value = writable(3);
     export let socket: WebSocket;
+
+    socket.addEventListener('message', (event) => {
+        value.set(event.data);
+    });
 
     function incrementCounter() {
     // Send an increment command to the server
@@ -19,5 +24,5 @@
 </script>
 
 <button on:click={incrementCounter}>
-    add one
+    {$value}
 </button>
