@@ -3,7 +3,8 @@
   import Button from '$lib/Button.svelte';
 
   let socket: WebSocket;
-  let buttonValues: { [key: string]: number } = {};
+  let usersData: { [key: string]: number } = {};
+
 
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
@@ -15,9 +16,9 @@
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'initial_data') {
-        buttonValues = message.data;
+        usersData = message.data;
       } else {
-        buttonValues[message.key] = message.value;
+        usersData[message.key] = message.value;
       }
     };
 
@@ -27,13 +28,34 @@
   });
 
   function handleClick(buttonKey: string) {
-    buttonValues[buttonKey]++; // Instant UI update
-    socket.send(JSON.stringify({ action: 'update', key: buttonKey, value: buttonValues[buttonKey] }));
+    usersData[buttonKey]++; // Instant UI update
+    socket.send(JSON.stringify({ action: 'update', key: buttonKey, value: usersData[buttonKey] }));
   }
+
+  console.log(usersData);
 </script>
 
 <div>
-  {#each Object.entries(buttonValues) as [key, value]}
-    <Button value={value} on:click={() => handleClick(key)} />
-  {/each}
+  <div>
+    <!-- keys in are always in this format -->
+    <!-- 'item[rownumber]:user[columnnumber]'' -->
+    <!-- for example 'item9:user3' -->
+    {#each [1, 2] as user}
+      <div class='button-row'>
+        {#each [1, 2, 3, 4, 5, 6] as item}
+          <Button 
+            value={usersData[`item${item}:user${user}`]} 
+            on:click={() => handleClick(`item${item}:user${user}`)} 
+          />
+        {/each}
+      </div>
+    {/each}
+  </div>
 </div>
+
+<style>
+    .button-row {
+        display: flex;
+        gap: 10px; /* Adds spacing between buttons */
+    }
+</style>
