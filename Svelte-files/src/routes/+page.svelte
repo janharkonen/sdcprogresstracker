@@ -40,9 +40,9 @@
     <!-- keys in are always in this format -->
     <!-- 'item[rownumber]:user[columnnumber]'' -->
     <!-- for example 'item9:user3' -->
-    {#each [1, 2] as user}
+    {#each [1, 2, 3, 4, 5, 6] as item}
       <div class='button-row'>
-        {#each [1, 2, 3, 4, 5, 6] as item}
+        {#each [1, 2] as user}
           <Button 
             value={usersData[`item${item}:user${user}`]} 
             on:click={() => handleClick(`item${item}:user${user}`)} 
