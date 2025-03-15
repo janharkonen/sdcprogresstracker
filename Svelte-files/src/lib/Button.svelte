@@ -1,39 +1,7 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { writable } from 'svelte/store';
-
-    export let key : string;
-
-    const value = writable(0);
-    
-    let socket : WebSocket;
-    
-    onMount(() => {
-        socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
-        
-        socket.onmessage = (event) => {
-          const { key: receivedKey, value: newValue } = JSON.parse(event.data);
-          if (receivedKey === key) {
-            value.set(newValue);
-          }
-        };
-
-        return () => {
-          socket.close();
-        };
-    });
-    
-    const updateValue = () => {
-        const newValue = Number($value) + 1;
-        socket.send(JSON.stringify({ action: 'update', key, value: newValue }));
-    };
+  export let value;
 </script>
 
-
-<button on:click={updateValue}>
-    {#await $value}
-      Loading...
-    {:then val}
-      {val}
-    {/await}
+<button on:click>
+  {value}
 </button>

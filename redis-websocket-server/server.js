@@ -30,12 +30,6 @@ async function runServer() {
      
 
       const keys = await redisPubClient.keys('item*:user*');
-      //const keys = [
-      //  'item1:user1',
-      //  'item2:user1',
-      //  'item3:user1',
-      //  'item4:user1',
-      //];
       console.log(keys)
       keys.forEach(async (key) => {
         await redisSubClient.subscribe(`__keyspace@0__:${key}`, async () => {
