@@ -6,7 +6,7 @@
   let buttonValues: { [key: string]: number } = {};
 
   onMount(() => {
-    socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
     socket.onopen = () => {
       console.log('WebSocket connected');
