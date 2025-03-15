@@ -28,9 +28,16 @@ async function runServer() {
     wss.on('connection', async (ws) => {
       console.log('Client connected');
      
-
       const keys = await redisPubClient.keys('item*:user*');
-      console.log(keys)
+      
+      const keyValues = await keys.reduce(async (accPromise, key) => {
+        const acc = await accPromise;
+        const value = await redisPubClient.get(key);
+        acc[key] = parseInt(value, 10);
+        return acc;
+      }, Promise.resolve({}));
+      ws.send(JSON.stringify({ type: 'initial_data', data: keyValues }));
+      
       keys.forEach(async (key) => {
         await redisSubClient.subscribe(`__keyspace@0__:${key}`, async () => {
           const newValue = await redisPubClient.get(key);

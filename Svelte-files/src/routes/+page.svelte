@@ -10,17 +10,15 @@
 
     socket.onopen = () => {
       console.log('WebSocket connected');
-      buttonValues = { 
-        'item1:user1': 0,
-        'item2:user1': 0,
-        'item3:user1': 0,
-        'item4:user1': 0,
-      };
     };
 
     socket.onmessage = (event) => {
-      const { key, value } = JSON.parse(event.data);
-      buttonValues[key] = parseInt(value, 10);
+      const message = JSON.parse(event.data);
+      if (message.type === 'initial_data') {
+        buttonValues = message.data;
+      } else {
+        buttonValues[message.key] = message.value;
+      }
     };
 
     socket.onerror = (err) => console.error('WebSocket error:', err);
