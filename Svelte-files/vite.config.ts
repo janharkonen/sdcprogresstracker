@@ -6,5 +6,9 @@ export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
 		allowedHosts: ['sdc.janharkonen.fi'],
+		hmr: {
+			host: 'sdc.janharkonen.fi',
+			protocol: 'wss',
+		},
 	}
 });
