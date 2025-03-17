@@ -8,9 +8,10 @@
 
 <div class='button-row'>
   {#each [1, 2] as user}
+    {@const key=`item${item}:user${user}`}
     <Button 
-      value={usersData[`item${item}:user${user}`]} 
-      on:click={() => handleClick(`item${item}:user${user}`)} 
+      value={usersData[key]} 
+      handleClick={() => handleClick(key)} 
     />
   {/each}
 </div>
