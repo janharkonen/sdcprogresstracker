@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Button from '$lib/Button.svelte';
+  import ButtonRow from '$lib/ButtonRow.svelte';
 
   let socket: WebSocket;
   let usersData: { [key: string]: number } = {};
-
 
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
@@ -41,21 +40,11 @@
     <!-- 'item[rownumber]:user[columnnumber]'' -->
     <!-- for example 'item9:user3' -->
     {#each [1, 2, 3, 4, 5, 6] as item}
-      <div class='button-row'>
-        {#each [1, 2] as user}
-          <Button 
-            value={usersData[`item${item}:user${user}`]} 
-            on:click={() => handleClick(`item${item}:user${user}`)} 
-          />
-        {/each}
-      </div>
+      <ButtonRow 
+        {item} 
+        {usersData} 
+        {handleClick} 
+      />
     {/each}
   </div>
 </div>
-
-<style>
-    .button-row {
-        display: flex;
-        gap: 10px; /* Adds spacing between buttons */
-    }
-</style>
