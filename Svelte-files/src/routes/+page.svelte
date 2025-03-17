@@ -28,8 +28,8 @@
   });
 
   function handleClick(buttonKey: string) {
-    usersData[buttonKey]++; // Instant UI update
-    socket.send(JSON.stringify({ action: 'update', key: buttonKey, value: usersData[buttonKey] }));
+    const newValue = Number(usersData[buttonKey]) + 1;
+    socket.send(JSON.stringify({ action: 'update', key: buttonKey, value: newValue }));
   }
 
   console.log(usersData);
