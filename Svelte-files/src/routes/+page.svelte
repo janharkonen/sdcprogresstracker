@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import ButtonRow from '$lib/ButtonRow.svelte';
+  import ButtonMatrix from '$lib/ButtonMatrix.svelte';
 
   let socket: WebSocket;
   let usersData: { [key: string]: number } = {};
@@ -39,12 +39,9 @@
     <!-- keys in are always in this format -->
     <!-- 'item[rownumber]:user[columnnumber]'' -->
     <!-- for example 'item9:user3' -->
-    {#each [1, 2, 3, 4, 5, 6] as item}
-      <ButtonRow 
-        {item} 
-        {usersData} 
-        {handleClick} 
-      />
-    {/each}
+    <ButtonMatrix
+      {usersData} 
+      {handleClick} 
+    />
   </div>
 </div>
