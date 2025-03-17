@@ -27,7 +27,7 @@
   });
 
   function handleClick(buttonKey: string) {
-    const newValue = Number(usersData[buttonKey]) + 1;
+    let newValue = (Number(usersData[buttonKey]) + 1) % 4;
     socket.send(JSON.stringify({ action: 'update', key: buttonKey, value: newValue }));
   }
 
