@@ -1,9 +1,6 @@
 <script lang="ts">
+  let { item, usersData, handleClick } = $props();
   import Button from '$lib/Button.svelte';
-  
-  export let item: number;
-  export let usersData: { [key: string]: number };
-  export let handleClick: (buttonKey: string) => void;
 </script>
 
 <div class='button-row'>
