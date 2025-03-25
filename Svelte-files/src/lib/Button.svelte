@@ -11,7 +11,7 @@
 
 <button 
   class="{bgColor} text-white font-bold py-2 px-4 rounded shadow-md border border-gray-300"
-  onclick={handleClick}>
+  onmousedown={handleClick}>
   {value}
 </button>
 
