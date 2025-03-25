@@ -1,6 +1,9 @@
 services:
   svelte-app:
-    build: ./Svelte-files
+    build: 
+      context: ./Svelte-files
+      args:
+        - VITE_WEBSOCKET_URL=${WEBSOCKET_URL}
     container_name: svelte
     ports:
       - "5173:5173"
@@ -9,9 +12,9 @@ services:
       - /app/node_modules
     depends_on:
       - redis
+      - websocket-server
     environment:
       - VITE_WEBSOCKET_URL=${WEBSOCKET_URL}
-
     restart: unless-stopped
   
   redis:
@@ -33,6 +36,12 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "try{require('http').get('http://localhost:8080/health',r=>r.statusCode==200?process.exit(0):process.exit(1))}catch(e){process.exit(1)}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   redis-data:
