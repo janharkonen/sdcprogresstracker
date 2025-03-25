@@ -1,7 +1,7 @@
-export function getItemCount( usersData: Record<string, number> ): number {
+export function getItemCount( matrixData: Record<string, number> ): number {
     return 40
 }
 
-export function getUserCount( usersData: Record<string, number> ): number {
+export function getUserCount( matrixData: Record<string, number> ): number {
     return 4
 }

@@ -1,8 +1,8 @@
 <script lang="ts">
-  let { usersData, handleClick } = $props();
+  let { matrixData, handleClick } = $props();
   import ButtonRow from '$lib/ButtonRow.svelte';
   import { getItemCount } from '$lib/dataUtils';
-  const itemCount = getItemCount(usersData)
+  const itemCount = getItemCount(matrixData)
   const numArray = Array.from(Array(itemCount), (_, i) => i + 1) 
 </script>
 
@@ -10,7 +10,7 @@
   {#each numArray as itemnum}
     <ButtonRow 
       {itemnum}
-      {usersData}
+      {matrixData}
       {handleClick}
     />
   {/each}

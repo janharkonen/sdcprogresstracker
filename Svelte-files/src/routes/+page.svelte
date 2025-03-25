@@ -3,7 +3,7 @@
   import ButtonMatrix from '$lib/ButtonMatrix.svelte';
 
   let socket = $state<WebSocket | null>(null);
-  let usersData = $state<Record<string, number>>({});
+  let matrixData = $state<Record<string, number>>({});
   let isConnected = $state(false);
 
   onMount(() => {
@@ -17,10 +17,10 @@
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'initial_data') {
-        usersData = { ...message.data };
+        matrixData = { ...message.data };
       } else {
-        usersData = { 
-          ...usersData, 
+        matrixData = { 
+          ...matrixData, 
           [message.key]: parseInt(message.value)
         };
       }
@@ -50,7 +50,7 @@
       return;
     }
     
-    const newValue = (usersData[key] + 1) % 4;
+    const newValue = (matrixData[key] + 1) % 4;
     try {
       socket.send(JSON.stringify({ action: 'update', key: key, value: newValue }));
     } catch (err) {
@@ -69,7 +69,7 @@
   {/if}
   
   <ButtonMatrix
-    usersData={usersData} 
+    matrixData={matrixData} 
     {handleClick}
   />
 </div>
