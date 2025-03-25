@@ -43,7 +43,7 @@ redis-cli SET item25 "rivi 25"
 redis-cli SET item26 "rivi 26"
 redis-cli SET item27 "rivi 27"
 redis-cli SET item28 "rivi 28"
-redis-cli SET item39 "rivi 29"
+redis-cli SET item29 "rivi 29"
 redis-cli SET item30 "rivi 30"
 redis-cli SET item31 "rivi 31"
 redis-cli SET item32 "rivi 32"
@@ -84,7 +84,7 @@ redis-cli SET item25:user1 0
 redis-cli SET item26:user1 0
 redis-cli SET item27:user1 0
 redis-cli SET item28:user1 0
-redis-cli SET item39:user1 0
+redis-cli SET item29:user1 0
 redis-cli SET item30:user1 0
 redis-cli SET item31:user1 0
 redis-cli SET item32:user1 0
@@ -124,7 +124,7 @@ redis-cli SET item25:user2 0
 redis-cli SET item26:user2 0
 redis-cli SET item27:user2 0
 redis-cli SET item28:user2 0
-redis-cli SET item39:user2 0
+redis-cli SET item29:user2 0
 redis-cli SET item30:user2 0
 redis-cli SET item31:user2 0
 redis-cli SET item32:user2 0
@@ -164,7 +164,7 @@ redis-cli SET item25:user3 0
 redis-cli SET item26:user3 0
 redis-cli SET item27:user3 0
 redis-cli SET item28:user3 0
-redis-cli SET item39:user3 0
+redis-cli SET item29:user3 0
 redis-cli SET item30:user3 0
 redis-cli SET item31:user3 0
 redis-cli SET item32:user3 0
@@ -204,7 +204,7 @@ redis-cli SET item25:user4 0
 redis-cli SET item26:user4 0
 redis-cli SET item27:user4 0
 redis-cli SET item28:user4 0
-redis-cli SET item39:user4 0
+redis-cli SET item29:user4 0
 redis-cli SET item30:user4 0
 redis-cli SET item31:user4 0
 redis-cli SET item32:user4 0
