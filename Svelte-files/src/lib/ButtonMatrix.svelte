@@ -3,12 +3,12 @@
   import ButtonRow from '$lib/ButtonRow.svelte';
 </script>
 
-<div>
+<div class="grid gap-4">
   {#each [1, 2, 3, 4, 5, 6] as item}
     <ButtonRow 
-      item={item} 
-      usersData={usersData} 
-      handleClick={handleClick} 
+      {item}
+      {usersData}
+      {handleClick}
     />
   {/each}
 </div>
