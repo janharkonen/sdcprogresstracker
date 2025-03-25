@@ -1,12 +1,15 @@
 <script lang="ts">
   let { usersData, handleClick } = $props();
   import ButtonRow from '$lib/ButtonRow.svelte';
+  import { getItemNum } from '$lib/dataUtils';
+  const itemCount = getItemNum(usersData)
+
 </script>
 
 <div class="grid gap-4">
-  {#each [1, 2, 3, 4, 5, 6] as item}
+  {#each Array.from(Array(itemCount), (_, i) => i + 1) as itemnum}
     <ButtonRow 
-      {item}
+      {itemnum}
       {usersData}
       {handleClick}
     />

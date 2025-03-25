@@ -50,7 +50,6 @@
       return;
     }
     
-    console.log(usersData)
     const newValue = (usersData[key] + 1) % 4;
     try {
       socket.send(JSON.stringify({ action: 'update', key: key, value: newValue }));
