@@ -32,24 +32,6 @@ async function runServer() {
       const matrixKeyValues = await matrixKeys.reduce(async (accPromise, key) => {
         const acc = await accPromise;
         const value = await redisPubClient.get(key);
-        acc[key] = parseInt(value, 10);
-        return acc;
-      }, Promise.resolve({}));
-      
-      const itemKeys1 = await redisPubClient.keys('item?');
-      const itemKeys2 = await redisPubClient.keys('item??');
-      const itemKeys = [...itemKeys1, ...itemKeys2]
-      const itemKeyValues = await itemKeys.reduce(async (accPromise, key) => {
-        const acc = await accPromise;
-        const value = await redisPubClient.get(key);
-        acc[key] = value;
-        return acc;
-      }, Promise.resolve({}));
-
-      const userKeys = await redisPubClient.keys('user?');
-      const userKeyValues = await userKeys.reduce(async (accPromise, key) => {
-        const acc = await accPromise;
-        const value = await redisPubClient.get(key);
         acc[key] = value;
         return acc;
       }, Promise.resolve({}));
@@ -57,8 +39,6 @@ async function runServer() {
       ws.send(JSON.stringify({ 
         type: 'initial_data', 
         data: matrixKeyValues,
-        items: itemKeyValues,
-        users: userKeyValues
       }));
       
       matrixKeys.forEach(async (key) => {

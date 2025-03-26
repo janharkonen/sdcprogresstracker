@@ -1,18 +1,13 @@
 <script lang="ts">
-  let { matrixData, itemData, userData, handleClick } = $props();
+  let { matrixData, handleClick } = $props();
   import ButtonRow from '$lib/ButtonRow.svelte';
-  import { getItemCount } from '$lib/dataUtils';
-  const itemCount = getItemCount(matrixData)
-  const countArray = Array.from(Array(itemCount), (_, i) => i + 1) 
 </script>
 
 <div class="grid gap-4">
-  {#each countArray as itemNum}
-    {@const itemKey = `item${itemNum}`}
+  {#each Object.keys(matrixData) as itemKey}
     <ButtonRow
-      itemName = {itemData[itemKey]}
-      {itemNum}
-      {matrixData}
+      {itemKey}
+      itemData = {matrixData[itemKey]}
       {handleClick}
     />
   {/each}

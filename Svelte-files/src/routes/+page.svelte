@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import ButtonMatrix from '$lib/ButtonMatrix.svelte';
+  import { initialData } from '$lib/dataUtils';
 
   let socket = $state<WebSocket | null>(null);
-  let matrixData = $state<Record<string, number>>({});
-  let itemData = $state<Record<string, string>>({});
-  let userData = $state<Record<string, string>>({});
+  let matrixData = $state<Record<string, Record<string, string>>>(initialData);
   let isConnected = $state(false);
   let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
+  $inspect(matrixData)
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
@@ -20,14 +20,31 @@
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'initial_data') {
-        matrixData = { ...message.data };
-        itemData = { ...message.items };
-        userData = { ...message.users };
-            isDataLoaded = true;
+        Object.keys(matrixData).forEach(itemKey => {
+          const itemData = matrixData[itemKey]
+          Object.keys(itemData)
+          .filter(key => key !== 'itemname')
+          .forEach((userKey) => {
+            const redisKey = `${itemKey}:${userKey}`
+            matrixData = {
+              ...matrixData,
+              [itemKey]: {
+                ...matrixData[itemKey],
+                [userKey]: message.data[redisKey]
+              }
+            }      
+          })
+        });
+        isDataLoaded = true;
       } else {
+        const itemKey = message.key.split(':')[0]
+        const userKey = message.key.split(':')[1]
         matrixData = { 
           ...matrixData, 
-          [message.key]: parseInt(message.value)
+          [itemKey]: {
+            ...matrixData[itemKey],
+            [userKey]: message.value
+          }
         };
       }
     };
@@ -50,15 +67,16 @@
     }
   });
 
-  function handleClick(key: string) {
+  function handleClick(redisKey: string) {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       console.error('WebSocket is not connected');
       return;
     }
-    
-    const newValue = (matrixData[key] + 1) % 4;
+    const itemKey = redisKey.split(':')[0]
+    const userKey = redisKey.split(':')[1]
+    const newValue = String((Number(matrixData[itemKey][userKey]) + 1) % 4);
     try {
-      socket.send(JSON.stringify({ action: 'update', key: key, value: newValue }));
+      socket.send(JSON.stringify({ action: 'update', key: redisKey, value: newValue }));
     } catch (err) {
       console.error('Error sending message: ',err)
     }
@@ -79,8 +97,6 @@
   {:else}
   <ButtonMatrix
     {matrixData} 
-    {itemData} 
-    {userData} 
     {handleClick}
   />
   {/if}
