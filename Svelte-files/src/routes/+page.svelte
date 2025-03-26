@@ -7,6 +7,7 @@
   let itemData = $state<Record<string, string>>({});
   let userData = $state<Record<string, string>>({});
   let isConnected = $state(false);
+  let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
@@ -22,6 +23,7 @@
         matrixData = { ...message.data };
         itemData = { ...message.items };
         userData = { ...message.users };
+            isDataLoaded = true;
       } else {
         matrixData = { 
           ...matrixData, 
@@ -70,12 +72,16 @@
     <div class="bg-yellow-100 p-4 rounded mb-4">
       Connecting to server...
     </div>
-  {/if}
-  
+  {:else if !isDataLoaded}
+    <div class="bg-blue-100 p-4 rounded mb-4">
+      Loading data...
+    </div>
+  {:else}
   <ButtonMatrix
     {matrixData} 
     {itemData} 
     {userData} 
     {handleClick}
   />
+  {/if}
 </div>
