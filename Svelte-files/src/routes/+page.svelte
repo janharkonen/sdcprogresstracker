@@ -4,6 +4,8 @@
 
   let socket = $state<WebSocket | null>(null);
   let matrixData = $state<Record<string, number>>({});
+  let itemData = $state<Record<string, string>>({});
+  let userData = $state<Record<string, string>>({});
   let isConnected = $state(false);
 
   onMount(() => {
@@ -18,6 +20,8 @@
       const message = JSON.parse(event.data);
       if (message.type === 'initial_data') {
         matrixData = { ...message.data };
+        itemData = { ...message.items };
+        userData = { ...message.users };
       } else {
         matrixData = { 
           ...matrixData, 
@@ -69,7 +73,9 @@
   {/if}
   
   <ButtonMatrix
-    matrixData={matrixData} 
+    {matrixData} 
+    {itemData} 
+    {userData} 
     {handleClick}
   />
 </div>

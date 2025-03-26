@@ -28,17 +28,40 @@ async function runServer() {
     wss.on('connection', async (ws) => {
       console.log('Client connected');
      
-      const keys = await redisPubClient.keys('item*:user*');
-      
-      const keyValues = await keys.reduce(async (accPromise, key) => {
+      const matrixKeys = await redisPubClient.keys('item*:user*');
+      const matrixKeyValues = await matrixKeys.reduce(async (accPromise, key) => {
         const acc = await accPromise;
         const value = await redisPubClient.get(key);
         acc[key] = parseInt(value, 10);
         return acc;
       }, Promise.resolve({}));
-      ws.send(JSON.stringify({ type: 'initial_data', data: keyValues }));
       
-      keys.forEach(async (key) => {
+      const itemKeys1 = await redisPubClient.keys('item?');
+      const itemKeys2 = await redisPubClient.keys('item??');
+      const itemKeys = [...itemKeys1, ...itemKeys2]
+      const itemKeyValues = await itemKeys.reduce(async (accPromise, key) => {
+        const acc = await accPromise;
+        const value = await redisPubClient.get(key);
+        acc[key] = value;
+        return acc;
+      }, Promise.resolve({}));
+
+      const userKeys = await redisPubClient.keys('user?');
+      const userKeyValues = await userKeys.reduce(async (accPromise, key) => {
+        const acc = await accPromise;
+        const value = await redisPubClient.get(key);
+        acc[key] = value;
+        return acc;
+      }, Promise.resolve({}));
+
+      ws.send(JSON.stringify({ 
+        type: 'initial_data', 
+        data: matrixKeyValues,
+        items: itemKeyValues,
+        users: userKeyValues
+      }));
+      
+      matrixKeys.forEach(async (key) => {
         await redisSubClient.subscribe(`__keyspace@0__:${key}`, async () => {
           const newValue = await redisPubClient.get(key);
           wss.clients.forEach(client => {
