@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import ButtonMatrix from '$lib/ButtonMatrix.svelte';
-  import { initialData } from '$lib/dataUtils';
+  import { itemList, userList } from '$lib/tableData';
 
   let socket = $state<WebSocket | null>(null);
-  let matrixData = $state<Record<string, Record<string, string>>>(initialData);
+  let matrixData = $state<Record<string, string>>({});
   let isConnected = $state(false);
   let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
   $inspect(matrixData)
+  $inspect(matrixData['item1:user3'])
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
@@ -19,34 +20,16 @@
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
+      console.log(message.data)
       if (message.type === 'initial_data') {
-        Object.keys(matrixData).forEach(itemKey => {
-          const itemData = matrixData[itemKey]
-          Object.keys(itemData)
-          .filter(key => key !== 'itemname')
-          .forEach((userKey) => {
-            const redisKey = `${itemKey}:${userKey}`
-            matrixData = {
-              ...matrixData,
-              [itemKey]: {
-                ...matrixData[itemKey],
-                [userKey]: message.data[redisKey]
-              }
-            }      
-          })
-        });
+        matrixData = {...message.data}
         isDataLoaded = true;
       } else {
-        const itemKey = message.key.split(':')[0]
-        const userKey = message.key.split(':')[1]
         matrixData = { 
           ...matrixData, 
-          [itemKey]: {
-            ...matrixData[itemKey],
-            [userKey]: message.value
-          }
-        };
-      }
+          [message.key]: message.value
+        }
+      };
     };
 
     socket.onerror = (err) => {
@@ -67,37 +50,21 @@
     }
   });
 
-  function handleClick(redisKey: string) {
-    if (!socket || socket.readyState !== WebSocket.OPEN) {
-      console.error('WebSocket is not connected');
-      return;
-    }
-    const itemKey = redisKey.split(':')[0]
-    const userKey = redisKey.split(':')[1]
-    const newValue = String((Number(matrixData[itemKey][userKey]) + 1) % 4);
-    try {
-      socket.send(JSON.stringify({ action: 'update', key: redisKey, value: newValue }));
-    } catch (err) {
-      console.error('Error sending message: ',err)
-    }
-  }
 </script>
   
-<div class="container mx-auto p-4">
-  <h1 class="text-2xl font-bold mb-4">Progress tracker</h1>
-  
-  {#if !isConnected}
-    <div class="bg-yellow-100 p-4 rounded mb-4">
-      Connecting to server...
-    </div>
-  {:else if !isDataLoaded}
-    <div class="bg-blue-100 p-4 rounded mb-4">
-      Loading data...
-    </div>
-  {:else}
-  <ButtonMatrix
-    {matrixData} 
-    {handleClick}
-  />
-  {/if}
-</div>
+{#if !isConnected}
+  <div class="bg-yellow-100 p-4 rounded mb-4">
+    Connecting to server...
+  </div>
+{:else if !isDataLoaded}
+  <div class="bg-blue-100 p-4 rounded mb-4">
+    Loading data...
+  </div>
+{:else}
+<ButtonMatrix
+  rows={itemList}
+  cols={userList}
+  {matrixData} 
+  {socket}
+/>
+{/if}

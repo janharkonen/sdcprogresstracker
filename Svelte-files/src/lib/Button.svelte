@@ -1,12 +1,25 @@
 <script lang="ts">
-  let { value, handleClick } = $props();
-
+  let { redisKey, value, socket } = $props();
+  console.log(value)
   const bgColor = $derived(
     Number(value) === 1 ? 'bg-red-400' :
     Number(value) === 2 ? 'bg-yellow-400' :
     Number(value) === 3 ? 'bg-green-400' :
                   'bg-gray-400'
   );
+
+  function handleClick() {
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      console.error('WebSocket is not connected');
+      return;
+    }
+    const newValue = String((Number(value) + 1) % 4);
+    try {
+      socket.send(JSON.stringify({ action: 'update', key: redisKey, value: newValue }));
+    } catch (err) {
+      console.error('Error sending message: ',err)
+    }
+  }
 </script>
 
 <button 
