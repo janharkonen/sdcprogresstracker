@@ -18,6 +18,8 @@ services:
     environment:
       - VITE_WEBSOCKET_URL=${WEBSOCKET_URL}
     restart: unless-stopped
+    networks:
+      - app-network
   
   redis:
     build: ./Redis-files
@@ -27,6 +29,8 @@ services:
     volumes:
       - ./Redis-files/data:/data
     restart: unless-stopped
+    networks:
+      - app-network
 
   websocket-server:
     build: ./redis-websocket-server
@@ -44,3 +48,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+    networks:
+      - app-network
+networks:
+  app-network:
