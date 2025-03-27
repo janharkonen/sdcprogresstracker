@@ -25,7 +25,7 @@ done
 echo "Redis is ready. Seeding data..."
 
 # Check if data already exists
-EXISTS=$(redis-cli EXISTS user1)
+EXISTS=$(redis-cli EXISTS item1:user1)
 if [ "$EXISTS" -eq 0 ]; then
   echo "No existing data found. Seeding Redis..."
   # Seed Redis with initial data
