@@ -8,8 +8,6 @@
   let isConnected = $state(false);
   let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
-  $inspect(matrixData)
-  $inspect(matrixData['item1:user3'])
   onMount(() => {
     socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
@@ -20,7 +18,6 @@
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log(message.data)
       if (message.type === 'initial_data') {
         matrixData = {...message.data}
         isDataLoaded = true;

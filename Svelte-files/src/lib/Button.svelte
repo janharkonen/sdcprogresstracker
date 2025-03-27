@@ -1,6 +1,5 @@
 <script lang="ts">
   let { redisKey, value, socket } = $props();
-  console.log(value)
   const bgColor = $derived(
     Number(value) === 1 ? 'bg-red-400' :
     Number(value) === 2 ? 'bg-yellow-400' :
