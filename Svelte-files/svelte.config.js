@@ -18,9 +18,6 @@ const config = {
 			out: 'build',
 			// Don't precompress assets (can cause issues in some Docker setups)
 			precompress: false,
-			// Generate a standalone server with embedded dependencies
-			// This makes it more self-contained for Docker
-			envPrefix: 'VITE_',
 		}),
 		alias: {
 			$lib: 'src/lib'
