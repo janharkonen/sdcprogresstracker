@@ -5,10 +5,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-ARG VITE_WEBSOCKET_URL
-ENV VITE_WEBSOCKET_URL=${VITE_WEBSOCKET_URL}
 
-# Build the app
+# Build the app for production
 RUN npm run build
 
 # Production stage
@@ -21,8 +19,10 @@ COPY --from=builder /app/package.json ./
 
 # Install only production dependencies
 RUN npm ci --production
+EXPOSE 5173
+CMD ["npm", "run", "preview", "--", "--host"]
 
-# For development mode
+# Development stage
 FROM node:22-alpine AS development
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -30,6 +30,3 @@ RUN npm install
 COPY . .
 EXPOSE 5173
 CMD ["npm", "run", "dev", "--", "--host"]
-
-# Use the appropriate target based on your environment
-FROM ${NODE_ENV:-development}

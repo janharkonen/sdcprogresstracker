@@ -2,8 +2,7 @@ services:
   svelte-app:
     build: 
       context: ./Svelte-files
-      args:
-        - VITE_WEBSOCKET_URL=${WEBSOCKET_URL}
+      target: ${SERVER_ENV:-development}  # Use SERVER_ENV from .env or default to development
     container_name: svelte
     ports:
       - "5173:5173"
@@ -42,6 +41,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
-
-volumes:
-  redis-data:
