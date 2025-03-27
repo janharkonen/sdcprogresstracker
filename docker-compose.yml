@@ -5,10 +5,13 @@ services:
       target: ${SERVER_ENV:-development}  # Use SERVER_ENV from .env or default to development
     container_name: svelte
     ports:
+      - "3000:3000"
       - "5173:5173"
     volumes:
       - ./Svelte-files:/app
       - /app/node_modules
+      - /app/.vite
+      - /app/.svelte-kit 
     depends_on:
       - redis
       - websocket-server
