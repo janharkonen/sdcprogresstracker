@@ -22,7 +22,7 @@
 </script>
 
 <button 
-  class="{bgColor} text-white font-bold py-2 px-4 rounded shadow-md border border-gray-300"
+  class="{bgColor} text-white font-bold w-full h-full rounded shadow-md border border-gray-300"
   onmousedown={handleClick}>
   {value}
 </button>
