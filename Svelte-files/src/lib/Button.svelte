@@ -1,4 +1,5 @@
 <script lang="ts">
+
   let { redisKey, value, socket } = $props();
   const bgColor = $derived(
     Number(value) === 1 ? 'bg-red-400' :
@@ -19,11 +20,25 @@
       console.error('Error sending message: ',err)
     }
   }
+  function handleRightClick(event: MouseEvent) {
+    event.preventDefault();
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      console.error('WebSocket is not connected');
+      return;
+    }
+    const newValue = String((Number(value) + 3) % 4);
+    try {
+      socket.send(JSON.stringify({ action: 'update', key: redisKey, value: newValue }));
+    } catch (err) {
+      console.error('Error sending message: ',err)
+    }
+  }
 </script>
 
 <button 
   class="{bgColor} text-white font-bold w-full h-full rounded shadow-md border border-gray-300"
-  onmousedown={handleClick}>
+  onmousedown={handleClick}
+  oncontextmenu={handleRightClick}>
   {value}
 </button>
 

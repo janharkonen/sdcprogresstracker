@@ -24,7 +24,7 @@
             <td class="sticky z-10 p-3 font-medium wrap max-w-32">{row+1}. {rows[row]}</td>
             {#each Array(userCount) as _, col}
               {@const redisKey=`item${row+1}:user${col+1}`}
-              <td class="p-0 text-center transition-all h-12">
+              <td class="text-center transition-all h-12 px-1">
                 <div class="w-full h-full">
                   <Button 
                     redisKey={redisKey}
