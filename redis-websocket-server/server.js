@@ -27,6 +27,7 @@ async function runServer() {
     
     wss.on('connection', async (ws) => {
       console.log('Client connected');
+      console.log('Clients connected: ', wss.clients.size);
      
       const matrixKeys = await redisPubClient.keys('item*:user*');
       const matrixKeyValues = await matrixKeys.reduce(async (accPromise, key) => {
@@ -63,6 +64,7 @@ async function runServer() {
         
         ws.on('close', async () => {
           console.log('Client disconnected');
+          console.log('Clients connected: ', wss.clients.size);
         });
       } catch (err) {
         console.error('Error in connection handler:', err);
