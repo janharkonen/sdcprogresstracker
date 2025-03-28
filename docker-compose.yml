@@ -12,9 +12,6 @@ services:
       - websocket-server
     environment:
       - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL:-ws://localhost:8080}
-    volumes:
-      - ./Svelte-files:/app
-      - /app/node_modules
     restart: unless-stopped
     networks:
       - app-network
