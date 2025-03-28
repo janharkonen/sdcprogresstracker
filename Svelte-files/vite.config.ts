@@ -22,6 +22,13 @@ export default defineConfig({
 		// Improve build reliability
 		emptyOutDir: true,
 		// Add source maps for better debugging
-		sourcemap: true
+		sourcemap: true,
+		rollupOptions: {
+			output: {
+			  entryFileNames: `assets/[name].[hash].js`,
+			  chunkFileNames: `assets/[name].[hash].js`,
+			  assetFileNames: `assets/[name].[hash].[ext]`
+			}
+		  }
 	}
 });
