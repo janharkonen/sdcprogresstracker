@@ -9,7 +9,7 @@
   let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
   onMount(() => {
-    socket = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+    socket = new WebSocket(import.meta.env.APP_WEBSOCKET_URL);
 
     socket.onopen = () => {
       console.log('WebSocket connected');

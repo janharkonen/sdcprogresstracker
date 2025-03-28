@@ -11,6 +11,7 @@ export default defineConfig({
 			allow: ['..']
 		}
 	},
+	envPrefix: 'APP_',
 	optimizeDeps: {
 		// Exclude dependencies that might be causing issues with optimization
 		exclude: ['svelte/internal', '@sveltejs/kit', 'svelte']
