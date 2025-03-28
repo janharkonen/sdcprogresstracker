@@ -6,5 +6,13 @@ export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	server: {
 		allowedHosts: ['sdc.janharkonen.fi'],
+	},
+	optimizeDeps: {
+		exclude: ['@tailwindcss/vite'] // Exclude the problematic dependency
+	},
+	build: {
+		// Improve build performance
+		reportCompressedSize: false,
+		cssMinify: 'lightningcss'
 	}
 });
