@@ -9,9 +9,6 @@ services:
       - "5173:5173"
     volumes:
       - ./Svelte-files:/app
-      - /app/node_modules
-      - /app/.vite
-      - /app/.svelte-kit 
     depends_on:
       - redis
       - websocket-server

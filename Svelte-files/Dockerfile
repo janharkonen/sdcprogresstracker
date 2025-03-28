@@ -1,4 +1,3 @@
-# Build stage
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package*.json ./
@@ -9,10 +8,11 @@ RUN npm run build
 # Production stage
 FROM node:22-alpine AS production
 WORKDIR /app
-COPY --from=build /app/package*.json ./
-COPY --from=build /app/build ./build
-COPY --from=build /app/node_modules ./node_modules
-CMD ["node", "build"]
+COPY --from=build /app .
+RUN npm install -g serve
+EXPOSE 3000
+ENV PORT=3000
+CMD ["serve", "build"]
 
 # Development stage
 FROM node:22-alpine AS development
