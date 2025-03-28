@@ -9,10 +9,7 @@ RUN npm run build
 FROM node:22-alpine AS production
 WORKDIR /app
 COPY --from=build /app .
-RUN npm install -g serve
-EXPOSE 3000
-ENV PORT=3000
-CMD ["serve", "build"]
+CMD ["node", "build"]
 
 # Development stage
 FROM node:22-alpine AS development
