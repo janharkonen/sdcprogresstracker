@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json .
 RUN npm ci
 COPY . .
+ARG VITE_APP_WEBSOCKET_URL
+RUN echo "VITE_APP_WEBSOCKET_URL=${VITE_APP_WEBSOCKET_URL}" > .env
 RUN npm run build
 RUN npm prune --production
 

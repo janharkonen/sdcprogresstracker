@@ -9,7 +9,8 @@
   let isDataLoaded = $state(false);  // Add a new state to track if data is loaded
 
   onMount(() => {
-    const wsUrl = import.meta.env.VITE_APP_WEBSOCKET_URL || import.meta.env.APP_WEBSOCKET_URL;
+    const wsUrl = import.meta.env.VITE_APP_WEBSOCKET_URL;
+    console.log('wsUrl: ',wsUrl)
     socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {

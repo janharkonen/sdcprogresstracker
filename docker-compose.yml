@@ -11,7 +11,7 @@ services:
       - redis
       - websocket-server
     environment:
-      - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL:-ws://localhost:8080}
+      - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
     restart: unless-stopped
     networks:
       - app-network
