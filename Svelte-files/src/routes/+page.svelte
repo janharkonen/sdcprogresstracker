@@ -10,7 +10,6 @@
 
   onMount(() => {
     const wsUrl = import.meta.env.VITE_APP_WEBSOCKET_URL;
-    console.log('wsUrl: ',wsUrl)
     socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
