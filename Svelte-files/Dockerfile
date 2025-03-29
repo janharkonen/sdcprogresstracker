@@ -5,6 +5,7 @@ RUN npm ci
 ARG VITE_APP_WEBSOCKET_URL
 RUN echo "VITE_APP_WEBSOCKET_URL=${VITE_APP_WEBSOCKET_URL}" > .env
 COPY . .
+RUN npm run prepare
 RUN npm run build
 RUN npm prune --production
 
@@ -20,10 +21,13 @@ EXPOSE 3000
 CMD ["node", "build"]
 
 # Development stage
-FROM node:20-alpine AS development
+FROM node:18-alpine AS development
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+ARG VITE_APP_WEBSOCKET_URL
+RUN echo "VITE_APP_WEBSOCKET_URL=${VITE_APP_WEBSOCKET_URL}" > .env
 COPY . .
+RUN npm run prepare
 EXPOSE 5173
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

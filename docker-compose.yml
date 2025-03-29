@@ -5,6 +5,9 @@ services:
       target: ${SERVER_ENV:-development}  # Use SERVER_ENV from .env or default to development
       args: 
         - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
+    environment:
+      - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
+      - HOST=0.0.0.0
     container_name: svelte
     ports:
       - "3000:3000"

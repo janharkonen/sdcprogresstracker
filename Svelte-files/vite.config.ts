@@ -10,8 +10,9 @@ export default defineConfig({
 			usePolling: true,  // Helps with file watching in Docker
 		},
 		hmr: {
-			host: '0.0.0.0',
+			host: 'localhost',
 			port: 5173, 
+			protocol: 'ws'
 		}
 	},
 	optimizeDeps: {
