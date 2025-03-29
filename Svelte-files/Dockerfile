@@ -2,16 +2,15 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json .
 RUN npm ci
-COPY . .
 ARG VITE_APP_WEBSOCKET_URL
 RUN echo "VITE_APP_WEBSOCKET_URL=${VITE_APP_WEBSOCKET_URL}" > .env
+COPY . .
 RUN npm run build
 RUN npm prune --production
 
 # Production stage
 FROM node:18-alpine AS production
 WORKDIR /app
-# Copy necessary files
 COPY --from=builder /app/build build/
 COPY --from=builder /app/node_modules node_modules/
 COPY package*.json .
