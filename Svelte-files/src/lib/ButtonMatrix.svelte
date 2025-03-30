@@ -6,7 +6,7 @@
 </script>
 
 <div class="container mx-auto py-8 px-4 max-w-250">
-  <div class="overflow-auto rounded-lg shadow-md border border-gray-200">
+  <div class="overflow-auto rounded-lg m-2 shadow-md border border-gray-200">
     <table class="w-full border-collapse bg-white text-xs md:text-lg">
       <thead>
         <tr class="bg-gray-100">
@@ -24,7 +24,7 @@
             <td class="sticky z-10 p-3 font-medium wrap max-w-32">{row+1}. {rows[row]}</td>
             {#each Array(userCount) as _, col}
               {@const redisKey=`item${row+1}:user${col+1}`}
-              <td class="text-center transition-all h-12 px-1">
+              <td class="text-center transition-all h-0 p-0.5">
                 <div class="w-full h-full">
                   <Button 
                     redisKey={redisKey}

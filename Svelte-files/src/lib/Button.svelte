@@ -49,10 +49,10 @@
   }
 
   button:hover {
-    transform: scale(1.05); /* Lätt förstoring vid hover för bättre användarupplevelse */
+    transform: scale(1.03);
   }
 
   button:active {
-    transform: scale(0.95); /* Liten intryckningseffekt vid klick */
+    transform: scale(0.97);
   }
 </style>
