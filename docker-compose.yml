@@ -8,6 +8,8 @@ services:
     environment:
       - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
       - HOST=0.0.0.0
+    volumes:
+      - ./Svelte-files:/app
     container_name: svelte
     ports:
       - "3000:3000"

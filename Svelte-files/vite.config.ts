@@ -20,7 +20,9 @@ export default defineConfig({
 		exclude: [
 			'@tailwindcss/vite',
 			'@sveltejs/kit',
-			'@sveltejs/vite-plugin-svelte'
+			'@sveltejs/vite-plugin-svelte',
+			'tailwindcss',
+			'dotenv'
 		]
 	},
 	build: {
