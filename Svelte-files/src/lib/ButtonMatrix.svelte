@@ -6,10 +6,10 @@
 </script>
 
   <div class="overflow-auto rounded-lg m-2 shadow-md border border-gray-200">
-    <table class="w-full border-collapse bg-white text-xs md:text-lg">
+    <table class="w-full border-collapse bg-yellow-50 text-xs md:text-lg">
       <thead>
-        <tr class="bg-gray-100">
-          <th class="sticky left-0 z-10 bg-gray-100 p-3 md:min-w-36 text-left font-semibold"></th>
+        <tr class="bg-yellow-200">
+          <th class="sticky left-0 z-10 p-3 md:min-w-36 text-left font-semibold"></th>
           {#each Array(userCount) as _, col}
             <th class="p-3 text-center font-semibold min-w-15">
               {cols[col]}
@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         {#each Array(itemCount) as _, row}
-          <tr class="hover:bg-gray-50 transition-colors">
+          <tr class="hover:bg-yellow-100 transition-colors">
             <td class="sticky z-10 p-3 font-medium wrap max-w-32">{row+1}. {rows[row]}</td>
             {#each Array(userCount) as _, col}
               {@const redisKey=`item${row+1}:user${col+1}`}

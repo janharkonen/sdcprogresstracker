@@ -37,7 +37,7 @@
 </script>
 
 <div class="container mx-auto px-4 my-6">
-  <div class="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl shadow-lg overflow-hidden">
+  <div class="bg-yellow-50 rounded-xl shadow-lg overflow-hidden">
     <div class="p-6">
       
       <div class="flex flex-col md:flex-row items-center gap-4">
