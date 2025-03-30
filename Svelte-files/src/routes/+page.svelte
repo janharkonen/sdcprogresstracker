@@ -61,7 +61,6 @@
     Loading data...
   </div>
 {:else}
-<div class="container mx-auto py-8 px-4 max-w-250 text-xs md:text-lg">
 <ButtonMatrix
   rows={itemList}
   cols={userList}
@@ -69,5 +68,4 @@
   {socket}
   />
 <Randomizer rows={itemList}/>
-</div>
 {/if}
