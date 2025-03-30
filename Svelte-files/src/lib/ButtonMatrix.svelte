@@ -5,7 +5,6 @@
   const itemCount = 40;
 </script>
 
-<div class="container mx-auto py-8 px-4 max-w-250">
   <div class="overflow-auto rounded-lg m-2 shadow-md border border-gray-200">
     <table class="w-full border-collapse bg-white text-xs md:text-lg">
       <thead>
@@ -39,7 +38,6 @@
       </tbody>
     </table>
   </div>
-</div>
 
 <style>
   /* Custom scrollbar for better user experience */
