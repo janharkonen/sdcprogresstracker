@@ -1,10 +1,26 @@
 services:
-  svelte-app:
+  svelte-app-prod:
     build: 
       context: ./Svelte-files
-      target: ${SERVER_ENV:-development}  # Use SERVER_ENV from .env or default to development
+      target: production
       args: 
         - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
+    container_name: svelte
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - websocket-server
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - prod
+  
+  svelte-app-dev:
+    build: 
+      context: ./Svelte-files
+      target: development
     environment:
       - VITE_APP_WEBSOCKET_URL=${APP_WEBSOCKET_URL}
       - HOST=0.0.0.0
@@ -12,7 +28,6 @@ services:
       - ./Svelte-files:/app
     container_name: svelte
     ports:
-      - "3000:3000"
       - "5173:5173"
     depends_on:
       - redis
@@ -20,6 +35,8 @@ services:
     restart: unless-stopped
     networks:
       - app-network
+    profiles:
+      - dev
   
   redis:
     build: ./Redis-files
