@@ -25,6 +25,6 @@ jobs:
       - name: Tag and push to Docker Hub
         run: |
           docker tag sdcprogresstracker-sveltefrontend:latest ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-sveltefrontend:latest
-          docker tag nginx:alpine ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-nginx:latest
+          docker tag sdcprogresstracker-nginx:latest ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-nginx:latest
           docker push ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-sveltefrontend:latest
           docker push ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}-nginx:latest
