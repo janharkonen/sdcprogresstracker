@@ -11,8 +11,6 @@ run_prod:
 	docker compose build sveltefrontend nginx
 	docker compose up sveltefrontend nginx
 stop_prod:
-	docker compose down
-	-docker image rmi sdcprogresstracker-sveltefrontend:latest 
-	-docker image rmi sdcprogresstracker-nginx:latest 
+	docker compose down --rmi local --volumes --remove-orphans
 	docker ps -a
 	docker image ls -a
