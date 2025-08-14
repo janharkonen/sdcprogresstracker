@@ -13,6 +13,6 @@ run_prod:
 stop_prod:
 	docker compose down
 	-docker image rmi sdcprogresstracker-sveltefrontend:latest 
-	-docker image rmi nginx:alpine 
+	-docker image rmi sdcprogresstracker-nginx:latest 
 	docker ps -a
 	docker image ls -a
