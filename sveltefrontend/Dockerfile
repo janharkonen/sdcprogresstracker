@@ -9,7 +9,6 @@ FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lock /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
-RUN cd /temp/dev && bun add -D @rollup/rollup-linux-arm64-gnu
 
 # install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
@@ -36,4 +35,4 @@ COPY --from=prerelease /usr/src/app/package.json .
 # run the app
 USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "--bun", "run", "build/index.js" ]
+ENTRYPOINT [ "bun", "build/index.js" ]
