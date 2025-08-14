@@ -32,6 +32,9 @@ services:
 
   nginx:
     image: nginx:alpine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nginxcontainer
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
