@@ -29,9 +29,11 @@ RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM oven/bun:1.2-alpine AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/build/ ./build/
-COPY --from=prerelease /usr/src/app/package.json .
+WORKDIR /usr/src/app
+# keep devDependencies because SvelteKit runtime may import them
+COPY --from=install /temp/dev/node_modules ./node_modules
+COPY --from=prerelease /usr/src/app/build ./build
+COPY --from=prerelease /usr/src/app/package.json ./package.json
 
 # run the app
 USER bun
