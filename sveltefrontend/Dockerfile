@@ -24,13 +24,15 @@ COPY . .
 
 # [optional] tests & build
 ENV NODE_ENV=production
+RUN bun run prepare
 RUN bun run build
 
 # copy production dependencies and source code into final image
 FROM oven/bun:1.2-alpine AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/build/ ./build/
-COPY --from=prerelease /usr/src/app/package.json .
+WORKDIR /usr/src/app
+COPY --from=install /temp/prod/node_modules ./node_modules
+COPY --from=prerelease /usr/src/app/build ./build
+COPY --from=prerelease /usr/src/app/package.json ./package.json
 
 # run the app
 USER bun
