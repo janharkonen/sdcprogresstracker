@@ -1,0 +1,36 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  caddy:
+    image: caddy
+    container_name: caddy
+    hostname: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_config:/config
+      - ./caddy_data:/data
+
+  sveltefrontend:
+    image: janharkonen/sdcprogresstracker-sveltefrontend:latest
+    labels:
+      - "com.centurylinkLabs.watchtower.enable=true"
+    deploy:
+      mode: replicated
+      replicas: 3
+
+networks:
+  default:
+    name: sdc-network
+    external: true
+
