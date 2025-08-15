@@ -5,6 +5,7 @@ services:
       - "--label-enable"
       - "--interval"
       - "30"
+      - "--rolling-restart"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   caddy:
@@ -24,7 +25,7 @@ services:
   sveltefrontend:
     image: janharkonen/sdcprogresstracker-sveltefrontend:latest
     labels:
-      - "com.centurylinkLabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.enable=true"
     deploy:
       mode: replicated
       replicas: 3
@@ -33,4 +34,5 @@ networks:
   default:
     name: sdc-network
     external: true
+
 
