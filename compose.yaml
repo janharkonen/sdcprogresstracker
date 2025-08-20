@@ -4,6 +4,8 @@ services:
     build:
       context: ./sveltefrontend
       dockerfile: Dockerfile_dev
+    ports:
+      - "5173:5173"
     expose:
       - "5173"
     volumes:
