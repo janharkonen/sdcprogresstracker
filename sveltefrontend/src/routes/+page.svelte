@@ -32,5 +32,5 @@
 </style>
 
 <h1>Testing deployment 123 change38</h1>
-<h1>This is from the server: {serverdata}</h1>
+<h1>This is from the server: {serverdata.current?.count}</h1>
 <button onclick={handleClick}>{count}</button>
