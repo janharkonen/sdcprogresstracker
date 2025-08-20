@@ -7,6 +7,6 @@ export const getState = query(z.number(),async () => {
     console.log("in server")
     serverVariable += 1
     return {
-        count: serverVariable
+        count: serverVariable,
     }
 })

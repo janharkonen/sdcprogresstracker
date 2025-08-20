@@ -12,6 +12,8 @@
         console.log("new count", count);
     }
 
+    const socket = new WebSocket(`/ws`);
+
 </script>
 
 <style>
