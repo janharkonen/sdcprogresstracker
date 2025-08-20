@@ -24,7 +24,17 @@ services:
       - PORT=3000
     networks:
       - app-network
-  
+
+  redis:
+    build: ./Redis-files
+    container_name: rediscontainer
+    volumes:
+      - ./Redis-files/data:/data
+    expose:
+      - "6379"
+    networks:
+      - app-network
+
   nginx-dev:
     image: nginx:alpine
     container_name: nginxcontainer-dev
@@ -44,6 +54,7 @@ services:
       - "8080:80"
     networks:
       - app-network
+
 
 networks:
   app-network:
