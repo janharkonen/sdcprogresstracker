@@ -12,3 +12,5 @@ stop_prod:
 	docker compose down --rmi local --volumes --remove-orphans
 	docker ps -a
 	docker image ls -a
+rediscli:
+	docker exec -it rediscontainer redis-cli

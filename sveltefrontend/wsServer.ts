@@ -1,3 +1,9 @@
+import { Redis } from "ioredis";
+const redis = new Redis({
+	host: "rediscontainer",
+	port: 6379,
+});
+
 console.log("before bun serve");
 Bun.serve({
 	port: 3001,
@@ -21,17 +27,20 @@ Bun.serve({
 	},
 	websocket: {
 		message(ws, message) {
-			ws.send("Hello from websocket server");
 			console.log("message", message);
-		}, // a message is received
+			ws.send("Hello from websocket server");
+		},
 		open(ws) {
 			console.log("open websocket");
-		}, // a socket is opened
+			ws.send("From wsServer.ts: open websocket");
+		},
 		close(ws, code, message) {
 			console.log("close websocket");
-		}, // a socket is closed
+			ws.send("From wsServer.ts: close websocket");
+		},
 		drain(ws) {
 			console.log("drain websocket");
-		}, // the socket is ready to receive more data
-	  },
-  });
+			ws.send("From wsServer.ts: drain websocket");
+		}
+	}
+});

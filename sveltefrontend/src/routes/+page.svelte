@@ -4,7 +4,7 @@
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
-    let serverdata = $derived(getState(123));
+    let songlist = $derived(getState("sdc"));
 
     function handleClick() {
         console.log("old count", count);
@@ -45,8 +45,16 @@
     }
 </style>
 
-<h1>Testing deployment 123 change38</h1>
-<h1>This is from the server: {serverdata.current?.count}</h1>
+<h1>Testing deployment 123 change293</h1>
+<h1>This list is from the server
+{#if songlist.current}
+    {#each songlist.current as song}
+        <h1>{song}</h1>
+    {/each}
+{:else}
+    <h1>No songs</h1>
+{/if}
+</h1>
 
 {#if socket}
     <h1>Socket: {socket.readyState}</h1>
