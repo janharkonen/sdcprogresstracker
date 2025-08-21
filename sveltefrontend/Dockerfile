@@ -37,4 +37,5 @@ COPY --from=prerelease /usr/src/app/package.json ./package.json
 # run the app
 USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "build/index.js" ]
+COPY wsServer.ts ./
+CMD ["sh", "-c", "bun build/index.js & bun wsServer.ts & wait"]

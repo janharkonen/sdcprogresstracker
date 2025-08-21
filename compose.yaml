@@ -4,10 +4,9 @@ services:
     build:
       context: ./sveltefrontend
       dockerfile: Dockerfile_dev
-    ports:
-      - "5173:5173"
     expose:
       - "5173"
+      - "3001"
     volumes:
       - ./sveltefrontend:/app
     networks:
@@ -19,12 +18,23 @@ services:
       context: ./sveltefrontend
     expose:
       - "3000"
+      - "3001"
     environment:
       - HOST=0.0.0.0
       - PORT=3000
     networks:
       - app-network
-  
+
+  redis:
+    build: ./Redis-files
+    container_name: rediscontainer
+    volumes:
+      - ./Redis-files/data:/data
+    expose:
+      - "6379"
+    networks:
+      - app-network
+
   nginx-dev:
     image: nginx:alpine
     container_name: nginxcontainer-dev
@@ -44,6 +54,7 @@ services:
       - "8080:80"
     networks:
       - app-network
+
 
 networks:
   app-network:
