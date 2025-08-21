@@ -1,12 +1,12 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
 	
 	let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href="https://picapi.janharkonen.fi/api/pics/6d0f03d78e4645fca50b61dfc3d0d0d9.png" type="image/x-icon">
+	<link rel="shortcut icon" href="https://picapi.janharkonen.fi/api/pics/6d0f03d78e4645fca50b61dfc3d0d0d9.png" type="image/x-icon">
 </svelte:head>
 
 <div class="container mx-auto py-8 px-4 max-w-250 text-xs md:text-lg">
