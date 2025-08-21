@@ -19,5 +19,5 @@ jobs:
 
       - name: Build docker image
         run: 
-          docker compose build sveltefrontend nginx
+          docker compose build sveltefrontend nginx redis
         working-directory: ./ 
