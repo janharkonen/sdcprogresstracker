@@ -1,3 +1,6 @@
 {yourdomain.here.com} {
     reverse_proxy sveltefrontend:3000
 }
+{yourdomain.here.com/ws} {
+    reverse_proxy sveltefrontend:3001
+}
