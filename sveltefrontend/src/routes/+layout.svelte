@@ -10,23 +10,19 @@
 </svelte:head>
 
 <script lang="ts" module>
-	let prevScrollPos = 0;
-	
 	function handleScroll() {
 		const header = document.querySelector('header');
 		if (!header) return;
 		
 		const currentScrollPos = window.scrollY;
 		
-		if (prevScrollPos > currentScrollPos) {
-			// Scrolling up - show header
+		if (currentScrollPos === 0) {
+			// At the top - show header
 			header.style.transform = 'translateY(0)';
 		} else {
-			// Scrolling down - hide header
+			// Not at the top - hide header
 			header.style.transform = 'translateY(-100%)';
 		}
-		
-		prevScrollPos = currentScrollPos;
 	}
 </script>
 
