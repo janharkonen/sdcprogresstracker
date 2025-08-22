@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { getState } from "./data.remote";
+    import { getProgressState, getSongList } from "./data.remote";
     import { onMount } from "svelte";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
-    let songlist = $derived(getState("sdc"));
+    let songlist = $derived(getSongList("taitomerkki"));
+    let progressState = $derived(getProgressState("sdc"));
 
     function handleClick() {
         console.log("old count", count);
@@ -45,16 +46,28 @@
     }
 </style>
 
-<h1>Testing deployment 123 change293</h1>
-<h1>This list is from the server
-{#if songlist.current}
-    {#each songlist.current as song}
-        <h1>{song}</h1>
-    {/each}
-{:else}
-    <h1>No songs</h1>
-{/if}
-</h1>
+<div class="w-full h-full">
+    <table class="table-fixed bg-gray-100 flex justify-center">
+        <thead class="sticky top-0">
+            <tr>
+                <th></th>
+                <th>Progress</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        {#if songlist.current}
+            <tbody>
+                {#each songlist.current as song}
+                    <tr>
+                        <td>{song}</td>
+                        <td>{progressState.current}</td>
+                    </tr>
+                {/each}
+            </tbody>
+        {/if}
+    </table>
+</div>
+<h1>This is progress state: {progressState.current}</h1>
 
 {#if socket}
     <h1>Socket: {socket.readyState}</h1>

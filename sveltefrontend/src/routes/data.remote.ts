@@ -7,10 +7,10 @@ const redis = new Redis({
     host: 'rediscontainer'
 })
 
-export const getState = query(z.string(), async () => {
+export const getSongList = query(z.string(), async (collection: string) => {
     console.log("in server")
     let songList = []
-    const keys = await redis.keys('taitomerkki:*')
+    const keys = await redis.keys(`${collection}:*`)
     keys.sort((a, b) => {
         const numA = parseInt(a.split(':')[1])
         const numB = parseInt(b.split(':')[1])
@@ -23,4 +23,16 @@ export const getState = query(z.string(), async () => {
         songList.push(value)
     }
     return songList
+})
+
+export const getProgressState = query(z.string(), async (group: string) => {
+    console.log("in server2")
+    const value = await redis.get(`${group}:progress_state`)
+    if (value) {
+        return value
+    } else {
+        const defaultState = 0x0n; // Using hexadecimal notation with BigInt
+        await redis.set(`${group}:progress_state`, String(defaultState))
+        return defaultState
+    }
 })
