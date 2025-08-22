@@ -1,10 +1,11 @@
 <script lang="ts">
     import { getProgressState, getSongList } from "./data.remote";
     import { onMount } from "svelte";
+    import Table from "$lib/components/table.svelte";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
-    let songlist = $derived(getSongList("taitomerkki"));
+    let songlist = $derived(getSongList("taitomerkki") ?? []);
     let progressState = $derived(getProgressState("sdc"));
 
     function handleClick() {
@@ -46,26 +47,8 @@
     }
 </style>
 
-<div class="w-full h-full">
-    <table class="table-fixed bg-gray-100 flex justify-center">
-        <thead class="sticky top-0">
-            <tr>
-                <th></th>
-                <th>Progress</th>
-                <th>State</th>
-            </tr>
-        </thead>
-        {#if songlist.current}
-            <tbody>
-                {#each songlist.current as song}
-                    <tr>
-                        <td>{song}</td>
-                        <td>{progressState.current}</td>
-                    </tr>
-                {/each}
-            </tbody>
-        {/if}
-    </table>
+<div class="w-full h-full bg-yellow-100 flex justify-center items-center">
+    <Table songlist={songlist.current ?? []} progressState={progressState.current ?? ""} />
 </div>
 <h1>This is progress state: {progressState.current}</h1>
 

@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+:root {
+    --taitomerkki-primary: #fefce8;
+    --taitomerkki-secondary: #fffac3;
+    --taitomerkki-tertiary: #cfe6ec;
+}
+
+body {
+    background-color: var(--taitomerkki-primary);
+}
