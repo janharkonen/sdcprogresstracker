@@ -50,12 +50,3 @@
 <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
     <Table songlist={songlist.current ?? []} progressState={progressState.current ?? ""} />
 </div>
-<h1>This is progress state: {progressState.current}</h1>
-
-{#if socket}
-    <h1>Socket: {socket.readyState}</h1>
-{:else}
-    <h1>No socket</h1>
-{/if}
-
-<button onclick={handleClick}>{count}</button>

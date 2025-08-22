@@ -2,8 +2,8 @@
     let { songlist, progressState } = $props();
 </script>
 
-<table class="table-fixed flex justify-center">
-    <thead class="sticky top-0">
+<table class="table-fixed w-full">
+    <thead class="sticky top-0 bg-yellow-200">
         <tr>
             <th></th>
             <th>Progress</th>

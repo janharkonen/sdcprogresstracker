@@ -48,7 +48,7 @@
 	  	</div>-->
 	</div>
 </header>
-<div class="container mx-auto py-8 sm:px-4 max-w-250 text-xs md:text-lg">
+<div class="container mx-auto max-w-250 text-xs md:text-lg">
 	{@render children()}
 </div>
 
