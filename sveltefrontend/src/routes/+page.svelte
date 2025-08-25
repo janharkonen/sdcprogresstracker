@@ -72,13 +72,14 @@
 </style>
 
 {#if progressState !== null}
-    <button onclick={() => handleClick(socket, 124n)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
+    <button onclick={() => handleClick(socket, progressState + 1n)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
         {progressState}
     </button>
 {/if}
 <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
     <Table 
         songlist={songlist} 
+        singerlist={singerlist}
         progressState={progressState ?? 0n} 
     />
 </div>
