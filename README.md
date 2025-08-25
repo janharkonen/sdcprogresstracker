@@ -1,48 +1,42 @@
-# SDC Taitomerkki -seurantajärjestelmä
+# 🎵 SDC Taitomerkki -seurantajärjestelmä
 
 Sovellus, joka mahdollistaa SMKL taitomerkin kappaleiden osaamistason seurannan kvartetille.
 
 ![Kuvakaappaus sovelluksesta](https://via.placeholder.com/800x400?text=SDC+Taitomerkki)
 
-## Asennus ja käyttöönotto
+## 🚀 Deployaus
 
-### PROD
+Nginx, Redis ja Svelte imaget on tallennettu omaan DockerHubiin julkisessa repositoriossa. Deployaus on tehty omaan VPS:ään käyttäen `vps_deploy` -kansion konffauksia. Ainoa asia mitä on lisättävä on `Caddyfile` pitäisi laittaa oma domain sekä tietenkin säätää omat DNS-asetukset.
 
-Luo `.env` tiedosto ja laita `APP_WEBSOCKET_URL` kohtaan url, joka osoittaa `http://localhost:8080`. Itse tein sen konffaamalla omalla servulla `/etc/nginx/sites-enabled/[oma domain]`
+### 💻 DEV
 
+Devausympäristöön riittää, että laittaa komennon
 ```
-APP_WEBSOCKET_URL='wss://[oma osoite]'
-```
-
-Docker kontit pyöritetään (ja kaadetaan) komennoilla
-```
-docker-compose --profile prod build
-docker-compose --profile prod up
-docker-compose --profile prod down
+make run_dev
 ```
 
-### DEV
+### 🗄️ REDIS Database Structure
 
-Devausympäristössä riittää, että laittaa `.env` tiedostoon
-```
-APP_WEBSOCKET_URL='ws://localhost:8080'
-```
+Redis is used as the primary data store with the following key structure:
 
-Docker kontit pyöritetään (ja kaadetaan) komennoilla
-```
-docker-compose --profile dev build
-docker-compose --profile dev up
-docker-compose --profile dev down
-```
+| Key Type | Format | Example | Description |
+|----------|--------|---------|-------------|
+| **collection** | `` | `` | Laulukokoelma (taitomerkki, perusmerkki, etc.) |
+| **group** | `` | `` | Kvartettiryhmä (sdc, gch, etc.) |
+| **Biisilista** | `{collection}:{id}` | `taitomerkki:1`, `taitomerkki:2` | Yksittäiset kappaleet kokoelmasta |
+| **Singer List** | `laulajat:{group}:{id}` | `laulajat:sdc:1`, `laulajat:sdc:2` | Ensemblen jäsenet |
+| **Progress State** | `state:{group}` | `state:sdc` | Kyseisen ensemblen suoritustila |
 
-## Kehitystä vaativat kohdat (Tekninen velka)
+### 📊 Suoritustila
+Jokainen kappale jokaisella jäsenellä on oma suoritustasonsa asteikolta 0-3, eli binäärinä {0, 1, 2, 3} -> {00, 01, 10, 11}. Eli jokainen suoritustaso vie 2 bittiä. Taitomerkissa on 40 kappaletta ja laulajia on 4, joten suoritustasoja on yhteensä 160 kpl. Tämä tarkoittaa että koko systeemin tila voidaan ilmoittaa käyttämällä 320 bittiä. 
 
-- UI: Table header voisi olla sticky
-- UI: Tee matriisin nappuloista kaikki samanlevyisiä ja -korkuisia
-- Websocket yhteys vois olla katkeamatta automaattisesti (laita joku pingi säännöllisin väliajoin)
-- Käytä suoraan Redis-stackin JSON ominaisuutta
-- CRON job servulle, joka backuppaa Redis tietokannan
+Esim. jos tämän systeemin tila olisi 010000000000001011001100
 
-## Lisenssi
 
-MIT-lisenssi, katso [LICENSE](LICENSE)-tiedosto.
+|  | Laulaja 1 | Laulaja 2 | Laulaja 3 | Laulaja 4 |
+|----------|--------|---------|---------|---------|
+| **Kappale 1** | 0 | 3 | 0 | 3 |
+| **Kappale 2** | 2 | 0 | 0 | 0 |
+| **Kappale 3** | 0 | 0 | 0 | 1 |
+
+Hexsadesimaalina tämä olisi 802cc, joka tallentuu Redikseen stringinä. Tämähän ei ole informaatioteoreettisesti optimaalisinta, mutta elämä on.
