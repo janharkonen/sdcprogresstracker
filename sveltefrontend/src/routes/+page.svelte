@@ -80,6 +80,6 @@
     <Table 
         songlist={songlist} 
         singerlist={singerlist}
-        progressState={progressState ?? 0n} 
+        progressState={progressState} 
     />
 </div>

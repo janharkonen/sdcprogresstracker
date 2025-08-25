@@ -1,21 +1,33 @@
 <script lang="ts">
-    let { songlist, singerlist, progressState } = $props();
+    import StateButton from "./stateButton.svelte";
+
+    let { songlist, singerlist, progressState, socket } = $props();
 </script>
 
 <table class="table-fixed w-full">
     <thead class="sticky top-0 bg-yellow-200">
         <tr>
             <th></th>
-            <th>Progress</th>
-            <th>State</th>
+            {#each singerlist as singer}
+                <th>{singer}</th>
+            {/each}
         </tr>
     </thead>
     {#if songlist}
         <tbody>
-            {#each songlist as song}
+            {#each songlist as song, i}
                 <tr>
-                    <td>{song}</td>
-                    <td>{progressState}</td>
+                    <td>{i + 1}. {song}</td>
+                    {#each singerlist as _, j}
+                    <td>
+                        <StateButton 
+                            socket={socket}
+                            progressState={progressState}
+                            row={i}
+                            column={j}
+                        />
+                    </td>
+                    {/each}
                 </tr>
             {/each}
         </tbody>
