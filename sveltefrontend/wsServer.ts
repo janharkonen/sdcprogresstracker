@@ -79,8 +79,8 @@ Bun.serve({
 		},
 		close(ws, code, message) {
 			console.log("close websocket");
-			ws.data.subscriber.quit();
 			ws.data.subscriber.unsubscribe();
+			ws.data.subscriber.quit();
 			ws.send("From wsServer.ts / close(ws): close websocket: code: " + code + " message: " + message);
 		},
 		drain(ws) {
