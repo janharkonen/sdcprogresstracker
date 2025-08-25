@@ -37,7 +37,11 @@
 
         socket.onmessage = (event) => {
             console.log("asd message", event.data);
-            progressState = BigInt(event.data);
+            try {
+                progressState = BigInt(event.data);
+            } catch (error) {
+                //pass
+            }
         }
 
     });
@@ -70,6 +74,6 @@
 <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
     <Table 
         songlist={songlist} 
-        progressState={progressState} 
+        progressState={progressState ?? 0n} 
     />
 </div>

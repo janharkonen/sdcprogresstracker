@@ -28,33 +28,60 @@ Bun.serve({
 	websocket: {
 		message(ws, message) {
 			const group = ws.data.group;
-			redis.set(`state:${group}`, message);
+			try {
+				redis.set(`state:${group}`, message);
+			} catch (error) {
+				console.error("From wsServer.ts / message(ws, message): Error setting progress state to redis", error);
+			}
 		},
 		open(ws) {
 			const group = ws.data.group;
-			ws.subscribe(`state:${group}`);
-			redis.subscribe(`__keyspace@0__:state:${group}`, (err, count) => {
+			
+			// Create a separate Redis client for pub/sub
+			const subscriber = new Redis({
+				host: "rediscontainer",
+				port: 6379,
+			});
+			
+			// Enable keyspace notifications if not already enabled
+			redis.config("SET", "notify-keyspace-events", "KEA").catch(err => {
+				console.error("Failed to set keyspace notifications:", err);
+			});
+			
+			// Subscribe to keyspace events for the specific key
+			subscriber.subscribe(`__keyspace@0__:state:${group}`, (err, count) => {
 				if (err) {
-					console.error("Error subscribing to keyspace event", err);
+					console.error("From wsServer.ts / open(ws): Error subscribing to keyspace event", err);
 				} else {
-					console.log(`Subscribed to ${count} channels`);
+					console.log(`From wsServer.ts / open(ws): Subscribed to ${count} channels`);
 				}
 			});
-			redis.on("message", (channel, message) => {
-				console.log("message in redis: channel", channel, "message", message);
-				redis.get(`state:${group}`, (err, reply) => {
-					if (err) {
-						console.error("Error getting progress state", err);
-					} else {
-						ws.send(reply);
-					}
-				});
+			
+			// Store the subscriber in ws.data for cleanup later
+			ws.data.subscriber = subscriber;
+			
+			// Handle messages from Redis pub/sub
+			subscriber.on("message", (channel, message) => {
+				console.log("From wsServer.ts / open(ws): message in redis: channel", channel, "message", message);
+				// Only fetch and send if the message indicates a SET operation
+				if (message === "set") {
+					redis.get(`state:${group}`).then((reply) => {
+						if (reply !== null) {
+							ws.send(reply);
+						}
+					}).catch(err => {
+						console.error("Error getting updated state:", err);
+					});
+				}
 			});
+			
 			ws.send("From wsServer.ts: open websocket");
 		},
 		close(ws, code, message) {
 			console.log("close websocket");
-			ws.send("From wsServer.ts: close websocket");
+			ws.data.subscriber.quit();
+			ws.data.subscriber.unsubscribe();
+			ws.send("From wsServer.ts / close(ws): close websocket: code: " + code + " message: " + message);
 		},
 		drain(ws) {
 			console.log("drain websocket");
