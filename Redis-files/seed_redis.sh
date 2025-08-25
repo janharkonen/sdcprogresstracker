@@ -70,6 +70,10 @@ if [ "$EXISTS" -eq 0 ]; then
   redis-cli SET taitomerkki:38 "Uti vår hage"
   redis-cli SET taitomerkki:39 "Veljesten paluu Jukolaan"
   redis-cli SET taitomerkki:40 "Virta venhettä vie"
+  redis-cli SET laulajat:sdc:1 "Martti"
+  redis-cli SET laulajat:sdc:2 "Eelis"
+  redis-cli SET laulajat:sdc:3 "Keinis"
+  redis-cli SET laulajat:sdc:4 "Jan"
 
   echo "Redis seeding complete."
 else

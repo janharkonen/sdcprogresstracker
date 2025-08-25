@@ -1,17 +1,35 @@
 <script lang="ts">
-    import { getProgressState, getSongList } from "./data.remote";
+    import { getProgressState, getSongList, getSingerList } from "./data.remote";
     import { onMount } from "svelte";
     import Table from "$lib/components/table.svelte";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
-    let songlist = $derived(getSongList("taitomerkki") ?? []);
-    let progressState = $derived(getProgressState("sdc"));
+    
+    let songlist = $state<string[]>([]);
+    getSongList("taitomerkki").then((v) => {
+        songlist = v ?? [];
+    });
+    
+    let singerlist = $state<string[]>([]);
+    getSingerList("sdc").then((v) => {
+        singerlist = v ?? [];
+    });
+    
+    let progressState = $state(0n);
+    getProgressState("sdc").then((v) => {
+        progressState = BigInt(v ?? 0n);
+    });
 
-    function handleClick() {
-        console.log("old count", count);
-        count = (count + 1) & 0b11;
-        console.log("new count", count);
+    $inspect("progressState", progressState);
+    $inspect("songlist", songlist);
+
+
+    function handleClick(socket: WebSocket | null, newState: BigInt) {
+        if (socket) {
+            console.log("clicked in frontend", newState);
+            socket.send(newState.toString());
+        }
     }
 
     onMount(() => {
@@ -23,8 +41,14 @@
         }
 
         socket.onmessage = (event) => {
-            console.log("message", event.data);
+            console.log("asd message", event.data);
+            try {
+                progressState = BigInt(event.data);
+            } catch (error) {
+                //pass
+            }
         }
+
     });
     
 
@@ -47,6 +71,14 @@
     }
 </style>
 
+{#if progressState !== null}
+    <button onclick={() => handleClick(socket, 124n)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
+        {progressState}
+    </button>
+{/if}
 <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
-    <Table songlist={songlist.current ?? []} progressState={progressState.current ?? ""} />
+    <Table 
+        songlist={songlist} 
+        progressState={progressState ?? 0n} 
+    />
 </div>

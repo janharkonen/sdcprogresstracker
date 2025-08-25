@@ -1,5 +1,5 @@
 <script lang="ts">
-    let { songlist, progressState } = $props();
+    let { songlist, singerlist, progressState } = $props();
 </script>
 
 <table class="table-fixed w-full">
