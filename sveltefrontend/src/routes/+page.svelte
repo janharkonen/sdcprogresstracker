@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getProgressState, getSongList } from "./data.remote";
+    import { getProgressState, getSongList, getSingerList } from "./data.remote";
     import { onMount } from "svelte";
     import Table from "$lib/components/table.svelte";
 
@@ -9,6 +9,11 @@
     let songlist = $state<string[]>([]);
     getSongList("taitomerkki").then((v) => {
         songlist = v ?? [];
+    });
+    
+    let singerlist = $state<string[]>([]);
+    getSingerList("sdc").then((v) => {
+        singerlist = v ?? [];
     });
     
     let progressState = $state(0n);

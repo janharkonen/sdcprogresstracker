@@ -26,6 +26,24 @@ export const getSongList = query(z.string(), async (collection: string) => {
     return songList
 })
 
+export const getSingerList = query(z.string(), async (group: string) => {
+    console.log("in server")
+    let singerList: string[] = []
+    const keys = await redis.keys(`laulajat:${group}:*`)
+    keys.sort((a, b) => {
+        const numA = parseInt(a.split(':')[1])
+        const numB = parseInt(b.split(':')[1])
+        return numA - numB
+    })
+    for (const key of keys) {
+        const value = await redis.get(key)
+        if (value !== null) {
+            singerList.push(value)
+        }
+    }
+    return singerList
+})
+
 // group = sdc, gch yms.
 export const getProgressState = query(z.string(), async (group: string) => {
     const value = await redis.get(`state:${group}`)
