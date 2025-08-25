@@ -1,7 +1,7 @@
 <script lang="ts">
-    let { socket, progressState, row, column } = $props();
+    let { socket, progressState, row, column, maxColCount } = $props();
 
-    let state = $derived((BigInt(progressState) >> BigInt(2 * (column+4*row) )) & 0b11n);
+    let state = $derived((BigInt(progressState) >> BigInt(2 * (column+maxColCount*row) )) & 0b11n);
 
     const bgColor = $derived(
         Number(state) === 1 ? 'bg-red-400' :

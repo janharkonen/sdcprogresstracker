@@ -31,8 +31,8 @@ export const getSingerList = query(z.string(), async (group: string) => {
     let singerList: string[] = []
     const keys = await redis.keys(`laulajat:${group}:*`)
     keys.sort((a, b) => {
-        const numA = parseInt(a.split(':')[1])
-        const numB = parseInt(b.split(':')[1])
+        const numA = parseInt(a.split(':')[2])
+        const numB = parseInt(b.split(':')[2])
         return numA - numB
     })
     for (const key of keys) {
