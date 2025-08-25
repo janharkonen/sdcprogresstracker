@@ -17,7 +17,7 @@ Bun.serve({
 	  const url = new URL(req.url);
 	  if (url.pathname === "/ws") {
 		console.log(`upgrade!`);
-		const success = server.upgrade(req);
+		const success = server.upgrade(req, { data: { group : "sdc" } });
 		return success
 		  ? undefined
 		  : new Response("WebSocket upgrade error", { status: 400 });
@@ -27,11 +27,29 @@ Bun.serve({
 	},
 	websocket: {
 		message(ws, message) {
-			console.log("message", message);
-			ws.send("Hello from websocket server");
+			const group = ws.data.group;
+			redis.set(`state:${group}`, message);
 		},
 		open(ws) {
-			console.log("open websocket");
+			const group = ws.data.group;
+			ws.subscribe(`state:${group}`);
+			redis.subscribe(`__keyspace@0__:state:${group}`, (err, count) => {
+				if (err) {
+					console.error("Error subscribing to keyspace event", err);
+				} else {
+					console.log(`Subscribed to ${count} channels`);
+				}
+			});
+			redis.on("message", (channel, message) => {
+				console.log("message in redis: channel", channel, "message", message);
+				redis.get(`state:${group}`, (err, reply) => {
+					if (err) {
+						console.error("Error getting progress state", err);
+					} else {
+						ws.send(reply);
+					}
+				});
+			});
 			ws.send("From wsServer.ts: open websocket");
 		},
 		close(ws, code, message) {
