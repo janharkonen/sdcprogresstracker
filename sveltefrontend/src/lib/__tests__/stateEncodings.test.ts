@@ -13,7 +13,6 @@ describe("stateEncodings", () => {
   it("getState9", () => expect(getState("faf456c", 10)).toEqual("2") );
   
   it("increaseState1", () => expect(increaseState("5", 0)).toEqual("6") );
-  it("increaseState1", () => expect(increaseState("5", 0)).toEqual("asdasdasd") );
   it("increaseState2", () => expect(increaseState("7", 0)).toEqual("4") );
   it("increaseState3", () => expect(increaseState("c", 0)).toEqual("d") );
   it("increaseState4", () => expect(increaseState("c", 1)).toEqual("0") );
