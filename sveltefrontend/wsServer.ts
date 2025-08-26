@@ -8,11 +8,6 @@ console.log("before bun serve");
 Bun.serve({
 	port: 3001,
 	fetch(req, server) {
-	  // upgrade the request to a WebSocket
-	  //if (server.upgrade(req)) {
-		//return; // do not return a Response
-	  //}
-	  //return new Response("Upgrade failed", { status: 500 });
 	  console.log("req.url", req.url);
 	  const url = new URL(req.url);
 	  if (url.pathname === "/ws") {
@@ -28,6 +23,7 @@ Bun.serve({
 	websocket: {
 		message(ws, message) {
 			const group = ws.data.group;
+			console.log("From wsServer.ts / message(ws, message): message", message);
 			try {
 				redis.set(`state:${group}`, message);
 			} catch (error) {
@@ -74,8 +70,6 @@ Bun.serve({
 					});
 				}
 			});
-			
-			ws.send("From wsServer.ts: open websocket");
 		},
 		close(ws, code, message) {
 			console.log("close websocket");

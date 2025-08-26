@@ -2,6 +2,7 @@
     import { getProgressState, getSongList, getSingerList } from "./data.remote";
     import { onMount } from "svelte";
     import Table from "$lib/components/table.svelte";
+    import { defaultState } from "$lib/functions/stateEncoding";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
@@ -16,19 +17,19 @@
         singerlist = v ?? [];
     });
     
-    let progressState = $state(0n);
+    let progressState = $state(defaultState);
     getProgressState("sdc").then((v) => {
-        progressState = BigInt(v ?? 0n);
+        progressState = v ?? defaultState;
     });
 
     $inspect("progressState", progressState);
     $inspect("songlist", songlist);
 
 
-    function handleClick(socket: WebSocket | null, newState: BigInt) {
+    function handleClick(socket: WebSocket | null, progressState: string) {
         if (socket) {
-            console.log("clicked in frontend", newState);
-            socket.send(newState.toString());
+            progressState = String(parseInt(progressState) + 1);
+            socket.send(progressState);
         }
     }
 
@@ -43,7 +44,7 @@
         socket.onmessage = (event) => {
             console.log("asd message", event.data);
             try {
-                progressState = BigInt(event.data);
+                progressState = event.data;
             } catch (error) {
                 //pass
             }
@@ -72,7 +73,7 @@
 </style>
 
 {#if progressState !== null}
-    <button onclick={() => handleClick(socket, progressState + 1n)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
+    <button onclick={() => handleClick(socket, progressState)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
         {progressState}
     </button>
 {/if}
@@ -81,5 +82,6 @@
         songlist={songlist} 
         singerlist={singerlist}
         progressState={progressState} 
+        socket={socket}
     />
 </div>

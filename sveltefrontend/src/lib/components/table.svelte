@@ -2,7 +2,7 @@
     import StateButton from "./stateButton.svelte";
 
     let { songlist, singerlist, progressState, socket } = $props();
-    const maxColCount = $derived(singerlist.length);
+    const colCount = $derived(singerlist.length);
 </script>
 
 <table class="table-fixed w-full">
@@ -26,7 +26,7 @@
                             progressState={progressState}
                             row={i}
                             column={j}
-                            maxColCount={maxColCount}
+                            colCount={colCount}
                         />
                     </td>
                     {/each}
