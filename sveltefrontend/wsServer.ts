@@ -11,14 +11,11 @@ const redis = new Redis({
 	port: 6379,
 });
 
-console.log("before bun serve");
 Bun.serve({
 	port: 3001,
 	fetch(req, server) {
-	  console.log("req.url", req.url);
 	  const url = new URL(req.url);
 	  if (url.pathname === "/ws") {
-		console.log(`upgrade!`);
 		const success = server.upgrade(req, { data: { group : "sdc" } });
 		return success
 		  ? undefined

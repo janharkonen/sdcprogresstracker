@@ -36,7 +36,6 @@
     }
 
     onMount(() => {
-        console.log(window.location.host);
         socketStatus = WebSocket.CONNECTING;
         if (window.location.protocol === "https:") {
             socket = new WebSocket(`wss://${window.location.host}/ws`);
@@ -45,7 +44,6 @@
         }
 
         socket.onmessage = (event) => {
-            console.log("asd message", event.data);
             try {
                 progressState = event.data;
             } catch (error) {
