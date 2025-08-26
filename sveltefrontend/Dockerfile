@@ -26,7 +26,7 @@ COPY . .
 ENV NODE_ENV=production
 RUN bun run prepare
 RUN bun run build
-RUN bun run test
+RUN bun run test:ci
 
 # copy production dependencies and source code into final image
 FROM oven/bun:1.2-alpine AS release
