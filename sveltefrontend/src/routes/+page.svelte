@@ -1,8 +1,7 @@
 <script lang="ts">
     import { getProgressState, getSongList, getSingerList } from "./data.remote";
     import { onMount } from "svelte";
-    import Table from "$lib/components/table.svelte";
-    import { defaultState } from "$lib/functions/stateEncoding";
+    import { Table, defaultState } from "$lib";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);

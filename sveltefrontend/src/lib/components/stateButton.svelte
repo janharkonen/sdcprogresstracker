@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { increaseState, getState } from "$lib/functions/stateEncoding";
+    import { increaseState, getState } from "$lib";
 
     let { socket, progressState, row, column, colCount } = $props();
 
