@@ -10,7 +10,6 @@ const redis = new Redis({
 
 // collection = taitomerkki, perusmerkki yms.
 export const getSongList = query(z.string(), async (collection: string) => {
-    console.log("in server")
     let songList: string[] = []
     const keys = await redis.keys(`${collection}:*`)
     keys.sort((a, b) => {
@@ -28,7 +27,6 @@ export const getSongList = query(z.string(), async (collection: string) => {
 })
 
 export const getSingerList = query(z.string(), async (group: string) => {
-    console.log("in server")
     let singerList: string[] = []
     const keys = await redis.keys(`laulajat:${group}:*`)
     keys.sort((a, b) => {
@@ -49,7 +47,6 @@ export const getSingerList = query(z.string(), async (group: string) => {
 export const getProgressState = query(z.string(), async (group: string) => {
     const value = await redis.get(`state:${group}`)
     if (value !== null) {
-        console.log("asd", value);
         return value
     } else {
         return defaultState

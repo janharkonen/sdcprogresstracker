@@ -5,6 +5,7 @@
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
+    let socketStatus = $state<number>(WebSocket.CONNECTING);
     
     let songlist = $state<string[]>([]);
     getSongList("taitomerkki").then((v) => {
@@ -35,7 +36,7 @@
     }
 
     onMount(() => {
-        console.log(window.location.host);
+        socketStatus = WebSocket.CONNECTING;
         if (window.location.protocol === "https:") {
             socket = new WebSocket(`wss://${window.location.host}/ws`);
         } else {
@@ -43,12 +44,23 @@
         }
 
         socket.onmessage = (event) => {
-            console.log("asd message", event.data);
             try {
                 progressState = event.data;
             } catch (error) {
                 //pass
             }
+        }
+
+        socket.onerror = (event) => {
+            socketStatus = WebSocket.CLOSED;
+        }
+
+        socket.onclose = () => {
+            socketStatus = WebSocket.CLOSING;
+            socketStatus = WebSocket.CLOSED;
+        }
+        socket.onopen = () => {
+            socketStatus = WebSocket.OPEN;
         }
 
     });
@@ -73,16 +85,27 @@
     }
 </style>
 
-{#if progressState !== null}
-    <button onclick={() => handleClick(socket, progressState)} class="w-full h-full bg-yellow-100 flex justify-center items-center">
-        {progressState}
-    </button>
+{#if socket}
+    {#if socketStatus === WebSocket.OPEN}
+        <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
+            <Table 
+                songlist={songlist} 
+                singerlist={singerlist}
+                progressState={progressState} 
+                socket={socket}
+            />
+        </div>
+    {:else if socketStatus === WebSocket.CONNECTING}
+        <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
+            <p>Connecting...</p>
+        </div>
+    {:else if socketStatus === WebSocket.CLOSED}
+        <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
+            <p>Disconnected</p>
+        </div>
+    {:else if socketStatus === WebSocket.CLOSING}
+        <div class="w-full h-full bg-yellow-100 flex justify-center items-center">
+            <p>Closing...</p>
+        </div>
+    {/if}
 {/if}
-<div class="w-full h-full bg-yellow-100 flex justify-center items-center">
-    <Table 
-        songlist={songlist} 
-        singerlist={singerlist}
-        progressState={progressState} 
-        socket={socket}
-    />
-</div>

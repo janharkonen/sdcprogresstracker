@@ -1,36 +1,39 @@
 import { Redis } from "ioredis";
+import type { ServerWebSocket } from "bun";
+
+interface WebSocketData {
+	group: string;
+	subscriber?: Redis;
+}
+
 const redis = new Redis({
 	host: "rediscontainer",
 	port: 6379,
 });
 
-console.log("before bun serve");
 Bun.serve({
 	port: 3001,
 	fetch(req, server) {
-	  console.log("req.url", req.url);
 	  const url = new URL(req.url);
 	  if (url.pathname === "/ws") {
-		console.log(`upgrade!`);
 		const success = server.upgrade(req, { data: { group : "sdc" } });
 		return success
 		  ? undefined
 		  : new Response("WebSocket upgrade error", { status: 400 });
 	  }
-  
+
 	  return new Response("Hello world");
 	},
 	websocket: {
-		message(ws, message) {
+		message(ws: ServerWebSocket<WebSocketData>, message) {
 			const group = ws.data.group;
-			console.log("From wsServer.ts / message(ws, message): message", message);
 			try {
 				redis.set(`state:${group}`, message);
 			} catch (error) {
 				console.error("From wsServer.ts / message(ws, message): Error setting progress state to redis", error);
 			}
 		},
-		open(ws) {
+		open(ws: ServerWebSocket<WebSocketData>) {
 			const group = ws.data.group;
 			
 			// Create a separate Redis client for pub/sub
@@ -58,7 +61,6 @@ Bun.serve({
 			
 			// Handle messages from Redis pub/sub
 			subscriber.on("message", (channel, message) => {
-				console.log("From wsServer.ts / open(ws): message in redis: channel", channel, "message", message);
 				// Only fetch and send if the message indicates a SET operation
 				if (message === "set") {
 					redis.get(`state:${group}`).then((reply) => {
@@ -71,15 +73,11 @@ Bun.serve({
 				}
 			});
 		},
-		close(ws, code, message) {
-			console.log("close websocket");
-			ws.data.subscriber.unsubscribe();
-			ws.data.subscriber.quit();
-			ws.send("From wsServer.ts / close(ws): close websocket: code: " + code + " message: " + message);
+		close(ws: ServerWebSocket<WebSocketData>, code, message) {
+			if (ws.data.subscriber) {
+				ws.data.subscriber.unsubscribe();
+				ws.data.subscriber.quit();
+			}
 		},
-		drain(ws) {
-			console.log("drain websocket");
-			ws.send("From wsServer.ts: drain websocket");
-		}
 	}
 });
