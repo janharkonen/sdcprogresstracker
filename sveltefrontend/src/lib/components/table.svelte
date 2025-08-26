@@ -1,7 +1,8 @@
 <script lang="ts">
-    import StateButton from "./stateButton.svelte";
+    import { StateButton } from "$lib";
 
     let { songlist, singerlist, progressState, socket } = $props();
+    const colCount = $derived(singerlist.length);
 </script>
 
 <table class="table-fixed w-full">
@@ -25,6 +26,7 @@
                             progressState={progressState}
                             row={i}
                             column={j}
+                            colCount={colCount}
                         />
                     </td>
                     {/each}
