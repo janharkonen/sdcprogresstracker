@@ -28,7 +28,9 @@
 
     function handleClick(socket: WebSocket | null, progressState: string) {
         if (socket) {
-            progressState = String(parseInt(progressState) + 1);
+            const stateBigInt = BigInt("0x" + progressState);
+            const newStateBigInt = stateBigInt + 1n;
+            progressState = newStateBigInt.toString(16);
             socket.send(progressState);
         }
     }

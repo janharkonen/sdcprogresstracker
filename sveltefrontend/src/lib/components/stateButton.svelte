@@ -3,7 +3,8 @@
 
     let { socket, progressState, row, column, colCount } = $props();
 
-    let state = $derived(getState(progressState, row, column, colCount));
+    let position = $derived(row * colCount + column);
+    let state = $derived(getState(progressState, position));
 
     const bgColor = $derived(
         Number(state) === 1 ? 'bg-red-400' :
@@ -13,7 +14,7 @@
     );
 
     function handleClick() {
-        const newProgressState = increaseState(progressState, row, column, colCount);
+        const newProgressState = increaseState(progressState, position);
         socket.send(newProgressState);
     }
 </script>
