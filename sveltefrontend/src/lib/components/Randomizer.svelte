@@ -36,22 +36,21 @@
   });
 </script>
 
-<div class="container mx-auto px-4 my-6">
-  <div class="bg-yellow-50 rounded-xl shadow-lg overflow-hidden">
+<div class="container mx-auto my-2">
+  <div class="bg-yellow-100 overflow-hidden">
     <div class="p-6">
-      
       <div class="flex flex-col md:flex-row items-center gap-4">
         <button
-          class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+          class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           onmousedown={handleClick}
           disabled={isAnimating}
         >
           {isAnimating ? 'Selecting...' : 'Get Random Item'}
         </button>
         
-        <div class="bg-white p-4 rounded-lg shadow-inner min-h-14 min-w-48 flex items-center justify-center border border-gray-200">
-          <p class={`${isAnimating ? 'text-indigo-600 animate-pulse' : 'text-gray-800'}`}>
-            {randomIndex}. {randomItem}
+        <div class="bg-white p-4 rounded-lg shadow-inner min-h-14 min-w-48 flex items-center justify-center border border-yellow-200">
+          <p class={`${isAnimating ? 'text-yellow-600 animate-pulse' : 'text-gray-800'}`}>
+            {randomIndex + 1}. {randomItem}
           </p>
         </div>
       </div>
