@@ -20,10 +20,10 @@
     {#if songlist}
     <tbody>
         {#each songlist as song, i}
-            <tr class="h-10 sm:h-14">
+            <tr class="h-10 sm:h-14 hover:bg-yellow-200">
                     <td 
                     id={`song-${i}`}
-                    class="h-full hover:bg-yellow-200 px-2 sm:px-4 whitespace-nowrap overflow-hidden text-ellipsis relative"
+                    class="h-full px-2 sm:px-4 whitespace-nowrap overflow-hidden text-ellipsis relative"
                     title={song}
                     onclick={(event) => {
                         const tooltip = document.getElementById(`tooltip`);
