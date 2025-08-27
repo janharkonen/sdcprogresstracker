@@ -44,7 +44,7 @@
 	  	</div>-->
 	</div>
 </header>
-<div class="container mx-auto max-w-200 text-xs md:text-lg">
+<div class="container mx-auto max-w-200 text-xs sm:text-lg">
 	{@render children()}
 </div>
 
