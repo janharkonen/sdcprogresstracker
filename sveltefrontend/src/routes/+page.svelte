@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getProgressState, getSongList, getSingerList } from "./data.remote";
     import { onMount } from "svelte";
-    import { Table, defaultState } from "$lib";
+    import { Table, defaultState, Randomizer } from "$lib";
 
     let count = $state(0);
     let socket: WebSocket | null = $state(null);
@@ -109,3 +109,5 @@
         </div>
     {/if}
 {/if}
+    
+<Randomizer rows={songlist}/>
