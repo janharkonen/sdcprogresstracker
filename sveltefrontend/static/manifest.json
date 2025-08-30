@@ -1,0 +1,16 @@
+{
+  "name": "SDC Progress Tracker",
+  "short_name": "SDC",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://picapi.janharkonen.fi/api/pics/6d0f03d78e4645fca50b61dfc3d0d0d9.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
